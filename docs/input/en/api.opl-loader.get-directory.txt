@@ -1,0 +1,9 @@
+Title: getDirectory()
+ShortTitle: Opl_Loader::getDirectory()
+Reference: string Opl_Loader::getDirectory()
+VersionSince: 2.0.0-dev7
+Status: static public
+
+----
+
+Returns the current location of OPL class files.

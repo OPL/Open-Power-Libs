@@ -1,0 +1,16 @@
+Title: _securePath()
+ShortTitle: Opl_Class::_securePath()
+Reference: void Opl_Class::_securePath( string &$path )
+VersionSince: 2.0.0-dev8
+Status: protected
+
+----
+
+A help method to sanitize the file paths by adding the slash to the end, if the user has not provided it:
+
+~~~~
+[php]
+$path = 'this/is/some/path';
+$this->_securePath($path);
+echo $path; // shows "this/is/secure/path/"
+~~~~

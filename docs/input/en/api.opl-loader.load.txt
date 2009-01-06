@@ -1,0 +1,11 @@
+Title: load()
+ShortTitle: Opl_Loader::load()
+Reference: bool Opl_Loader::load( $className )
+VersionSince: 2.0.0-dev7
+Status: static public
+SeeAlso:
+ - api.opl-loader.autoload
+
+----
+
+An alias to [api.opl-loader.autoload].

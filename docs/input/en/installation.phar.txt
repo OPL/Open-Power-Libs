@@ -1,0 +1,35 @@
+Title: PHAR installation
+
+----
+
+PHAR archives solve some problems with the directory structure and the initialization. Be sure that you have the appropriate archives and simply include them:
+
+~~~~
+[php]
+<?php
+
+	require('./opl.phar');
+	require('./opt.phar');
+	require('./opf.phar');
+
+	// use the libraries now
+~~~~
+
+All the initialization is done automatically. 
+
+> [information]
+> When loading a PHAR archive like above, PHP does not parse and execute all the scripts in the archive. It executes only the part called *stub* which initializes the library. The rest of the content is executed on demand.
+
+You will still need the directory structure described in the previous chapter, if you are going to use third party classes and extensions. In this case, you must specify the path to this directory once you loaded the libraries:
+
+~~~~
+[php]
+<?php
+
+	require('./opl.phar');
+	require('./opt.phar');
+	require('./opf.phar');
+	Opl_Loader::setDirectory('./opl_dir/');
+
+	// your code goes here
+~~~~

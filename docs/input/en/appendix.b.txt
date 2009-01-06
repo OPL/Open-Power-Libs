@@ -1,0 +1,16 @@
+Title: License and authors
+Appendix: B
+
+----
+
+Open Power Libs &copy; [Invenzzia group](http://www.invenzzia.org/) 2008. The code was written by:
+
++ Tomasz "Zyx" Jędrzejewski
++ Jacek "eXtreme" Jędrzejewski
++ Radosław Piekarz
+
+The documentation was generated with [TypeFriendly](http://www.invenzzia.org/) that uses [Tango Icon Library](http://tango.freedesktop.org), a part of Tango Desktop Project which is available under Creative Commons Attribution-ShareAlike 2.5 license.
+
+This documentation is available under the terms of GNU Free Documentation License 2.1. The text of the license is included into the package in the `info/COPYING_DOCS` file. If you do not have this file, the license is available online here: [http://www.gnu.org/licenses/fdl.html](http://www.gnu.org/licenses/fdl.html).
+
+OPL is a subject to the **new BSD license** which should be bundled with the source code in the `LICENSE` file. It is also available through WWW at this URL: [http://www.invenzzia.org/license/new-bsd](http://www.invenzzia.org/license/new-bsd).

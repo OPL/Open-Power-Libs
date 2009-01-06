@@ -1,0 +1,45 @@
+Title: _resolveContextInfo()
+ShortTitle: Opl_ErrorHandler::_resolveContextInfo()
+Reference: void Opl_ErrorHandler::_resolveContextInfo( Opl_Exception $exception )
+VersionSince: 2.0.0-dev8
+Status: protected
+
+----
+
+Checks the protected field `$_context` for context information assigned to the specified exception type. The context information consists of filters that display some data in the error message frame. The method may be used in `display()` to display the context information in the specified place.
+
+Context help
+============
+
+A sample context information looks like this:
+
+~~~~
+[php]
+protected $_context = array(
+	'Exception_Name_1' => array(
+		'Filter1' => array('Filter arguments'),
+		'Filter2' => array('Filter arguments'),	
+	),
+	'Exception_Name_2' => array(
+		'Filter1' => array('Filter arguments'),
+		'Filter2' => array('Filter arguments'),	
+	),
+	// For not defined exceptions
+	'__UNKNOWN__' => array(
+		'Filter1' => array('Filter arguments'),
+		'Filter2' => array('Filter arguments'),	
+	),
+);
+~~~~
+
+The filters are simple methods that take the exception object as the first argument, but optionally, they can take much more. The method name must begin with `_print`, so that `Filter1` points to `_printFilter` method. The HTML code is displayed with `echo`.
+
+Available filters
+=================
+
+OPL provides the following filters:
+
+1. `ErrorInfo` - displays the text provided in the argument.
+2. `StackInfo` - used to display stack assigned to the exception, with marking the last element as invalid. In the argument we can specify the stack title.
+
+The libraries may also provide their own filters.

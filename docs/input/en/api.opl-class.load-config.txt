@@ -1,0 +1,9 @@
+Title: loadConfig()
+ShortTitle: Opl_Class::loadConfig()
+Reference: bool Opl_Class::loadConfig( mixed $config )
+VersionSince: 2.0.0-dev7
+Status: public
+
+----
+
+Loads the library configuration from an array or INI file. Returns **false** if the file could not be loaded or `$config` is not array.

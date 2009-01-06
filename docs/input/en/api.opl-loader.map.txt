@@ -1,0 +1,17 @@
+Title: map()
+ShortTitle: Opl_Loader::map()
+Reference: string Opl_Loader::map( string $className, string $file )
+VersionSince: 2.0.0-dev7
+Status: static public
+
+----
+
+The method maps the specified class name to the specified PHP file. If the script would like to create an object of this class, the autoloader will load the specified `$file` instead of the default one.
+
+~~~~
+[php]
+Opl_Loader::map('Opl_Some_Class', 'opl/somefile.php');
+
+// This will load "opl/somefile.php" instead of "opl/some/class.php"
+$obj = new Opl_Some_Class;
+~~~~

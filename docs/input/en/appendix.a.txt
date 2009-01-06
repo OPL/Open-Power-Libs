@@ -1,0 +1,13 @@
+Title: Development and support
+Appendix: A
+
+----
+
+If you look for a support, visit our [discussion board](http://forums.invenzzia.org/) available in English language. We encourage to send new ideas and feature requests. If you found a bug, visit our [bugtracker](http://bugs.invenzzia.org/) - **remember that the bugs must be described IN ENGLISH ONLY!!!**
+
+The development versions of OPL can be downloaded from our Subversion repository. It supports anonymous read-only connections that allow to ''checkout'' its contents. The address is **http://svn.invenzzia.org/svn/opl**. You can also watch the repository on-line: [svn.invenzzia.org](http://svn.invenzzia.org).
+
+Contributions
+=============
+
+You are encouraged to contribute and help developing the libraries. Most of the forms of contribution do not require any formalities. However, you must remember that OPL license, although is very convienient for the end users, does not cover automatically your code. Yes, you can send patches and other code submissions, but we cannot accept them to the SVN repository without a signed certificate. If you are interested in such a form of contribution, please contact with Invenzzia team by e-mail to get more information.

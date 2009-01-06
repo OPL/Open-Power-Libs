@@ -1,0 +1,11 @@
+Title: getState()
+ShortTitle: Opl_Registry::getState()
+Reference: mixed Opl_Registry::getState( string $name )
+VersionSince: 2.0.0-dev7
+Status: static public
+SeeAlso:
+ - api.opl-registry.set-state
+
+----
+
+Returns the specified value stored as `$name`.
