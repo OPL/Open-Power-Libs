@@ -146,10 +146,23 @@
 		
 		static public function autoload($className)
 		{
-			if(class_exists($className) || interface_exists($className))
+			// Backward compatibility to PHP 5.2
+			// This allows to load the compatibility classes even if some parts of OPT are
+			// loaded by different autoloader.
+			if(!self::$_loaded)
 			{
-				return true;
+				if(version_compare(phpversion(), '5.3.0-dev', '<'))
+				{
+					require((isset(self::$_mappedLibs['Opl']) ? self::$_mappedLibs['Opl'] : self::$_directory.'Opl/').'Php52.php');
+				}
+				self::$_loaded = true;
+				if(class_exists($className, false) || interface_exists($className, false))
+				{
+					return true;
+				}
 			}
+
+			// Later, only the OPT classes go.
 			if(strpos($className, 'Op') !== 0)
 			{
 				return false;
@@ -168,16 +181,6 @@
 			{
 				$base = self::$_directory.$items[0].'/';
 			}
-
-			// Backward compatibility to PHP 5.2
-			if(!self::$_loaded)
-			{
-				if(version_compare(phpversion(), '5.3.0-dev', '<'))
-				{
-					require((isset(self::$_mappedLibs['Opl']) ? self::$_mappedLibs['Opl'] : self::$_directory.'Opl/').'Php52.php');
-				}
-				self::$_loaded = true;
-			}
 			
 			// Load the base library file, if not loaded yet.
 			if(!isset(self::$_initialized[$items[0]]))
@@ -187,12 +190,12 @@
 					require($base.'Class.php');
 				}
 				self::$_initialized[$items[0]] = true;
+				if(class_exists($className, false) || interface_exists($className, false))
+				{
+					return true;
+				}
 			}
-			
-			if(class_exists($className) || interface_exists($className))
-			{
-				return true;
-			}
+
 			// Manually mapped files support
 			if(isset(self::$_mappedFiles[$className]))
 			{
