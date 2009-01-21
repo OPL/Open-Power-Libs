@@ -20,13 +20,13 @@ The general library configuration should be done as public fields with short and
 
 There is also a generic interface for loading and returning the configuration:
 
-1. [api.opl-class.load-config]
-2. [api.opl-class.get-config]
+1. [Opl_Class::loadConfig()][api.opl-class.load-config]
+2. [Opl_Class::getConfig()][api.opl-class.get-config]
 
 Plugin support
 ==============
 
-If the library is going to use plugins, it must implement [api.opl-class._plugin-loader] protected method. `Opl_Class` defines three configuration directives for plugins:
+If the library is going to use plugins, it must implement [Opl_Class::_pluginLoader()][api.opl-class._plugin-loader] protected method. `Opl_Class` defines three configuration directives for plugins:
 
 **pluginDir**
 :	`string` A single directory with plugins.

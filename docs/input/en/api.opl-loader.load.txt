@@ -8,4 +8,4 @@ SeeAlso:
 
 ----
 
-An alias to [api.opl-loader.autoload].
+An alias to [Opl_Loader::autoload()][api.opl-loader.autoload].
