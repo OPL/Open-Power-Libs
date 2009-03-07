@@ -17,11 +17,21 @@
 	{
 		protected $_library = 'Open Power Libs';
 		protected $_context = array(
+			'Opl_Debug_Exception' => array(
+				'BasicConfiguration' => array(),
+				'Backtrace' => array()
+			),
 			'__UNKNOWN__' => array(
-				'_printBasicConfiguration' => array()
+				'BasicConfiguration' => array()
 			),
 		);
-	
+
+		/**
+		 * Displays an exception information using the default OPL graphics
+		 * style.
+		 *
+		 * @param Opl_Exception $exception The exception to be displayed.
+		 */	
 		public function display(Opl_Exception $exception)
 		{
 echo <<<EOF
@@ -83,6 +93,7 @@ EOF;
 		echo "  			<p class=\"call\">Debug mode is disabled. No additional information provided.</p>\r\n";
 	}
 	echo "  		</div></div>\r\n";
+
 	if(Opl_Registry::getState('opl_extended_errors'))
 	{
 		echo "			<div class=\"object\"><div>\r\n";
@@ -103,7 +114,6 @@ EOF;
 			{
 				$use = '__UNKNOWN__';
 			}
-			
 			foreach($this->_context[$use] as $name => $config)
 			{
 				if(!method_exists($this, '_print'.$name))
@@ -141,4 +151,35 @@ EOF;
 				$i++;
 			}
 		} // end _printStackInfo();
+
+		protected function _printBasicConfiguration($exception)
+		{
+			/* null */
+		} // end _printBasicConfiguration();
+
+		protected function _printBacktrace($exception)
+		{
+			echo "		<p class=\"directive\"><strong>Debug backtrace:</strong></p>\r\n";
+			$data = array_reverse($exception->getTrace());
+			$data[] = array(
+				'function' => 'Opl_Debug_Exception',
+				'file' => $exception->getFile(),
+				'line' => $exception->getLine()
+			);
+			while(sizeof($data) > 0)
+			{
+				$item = array_shift($data);
+
+				$name = (isset($item['class']) ? $item['class'].'::' : '').$item['function'];
+
+				if(sizeof($data) == 0)
+				{
+					echo "		<p class=\"directive\">".$name."() <span class=\"bad\">".basename($item['file']).':'.$item['line']."</span></p>\r\n";
+				}
+				else
+				{
+					echo "		<p class=\"directive\">".$name."() <span>".basename($item['file']).':'.$item['line']."</span></p>\r\n";
+				}
+			}
+		} // end _printBacktrace();
 	} // end Opl_ErrorHandler;

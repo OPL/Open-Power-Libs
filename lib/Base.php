@@ -35,6 +35,11 @@
 		static private $_directory = '';
 		static private $_loaded = false;
 
+		/**
+		 * Specifies a directory path to the OPL libraries.
+		 *
+		 * @param string $name The directory name where the OPL libraries are kept.
+		 */
 		static public function setDirectory($name)
 		{
 			if($name != '')
@@ -55,16 +60,30 @@
 			self::$_directory = $name;
 		} // end setDirectory();
 
+		/**
+		 * Registers the autoloader.
+		 */
 		static public function register()
 		{
 			spl_autoload_register(array('Opl_Loader', 'autoload'));
 		} // end register();
-		
+
+		/**
+		 * Returns the OPL libraries directory.
+		 *
+		 * @return string The OPL libraries directory.
+		 */
 		static public function getDirectory()
 		{
 			return self::_directory;
 		} // end getDirectory();
 
+		/**
+		 * Allows to load the path list for the libraries either from an
+		 * array or from an INI file.
+		 *
+		 * @param string|array $config The path list to the OPL libraries.
+		 */
 		static public function loadPaths($config)
 		{
 			if(!is_array($config))
@@ -104,6 +123,12 @@
 			}
 		} // end loadPaths();
 
+		/**
+		 * Allows to specify a directory for a single OPL library.
+		 *
+		 * @param string $libraryName The three-letter library code.
+		 * @param string $directory The directory, where the library is located.
+		 */
 		static public function mapLibrary($libraryName, $directory)
 		{
 			if($directory != '')
@@ -116,6 +141,15 @@
 			self::$_mappedLibs[$libraryName] = $directory;
 		} // end mapLibrary();
 
+		/**
+		 * Allows to specify a path for one of the classes manually.
+		 * However, the path must be located within the class library
+		 * directory.
+		 *
+		 * @param string $className The class name
+		 * @param string $directory The directory, where the library is located.
+		 * @param string|null $library If not specified, the library name is taken from the class name.
+		 */
 		static public function map($className, $file, $library = NULL)
 		{
 			if(is_null($library))
@@ -138,12 +172,35 @@
 				self::$_mappedFiles[$className] = self::$_directory.$file;
 			}
 		} // end map();
-		
+
+		/**
+		 * Allows to specify an absolute path to the class.
+		 *
+		 * @param string $className The class name.
+		 * @param string $file The absolute path to the class file.
+		 */
+		static public function mapAbsolute($className, $file)
+		{
+			self::$_mappedFiles[$className] = $file;
+		} // end mapAbsolute();
+
+		/**
+		 * Loads the class.
+		 *
+		 * @param string $name The class name.
+		 * @return boolean True, if the class was successfully loaded.
+		 */
 		static public function load($name)
 		{
 			return self::autoload($name);
 		} // end load();
-		
+
+		/**
+		 * An autoloader method.
+		 *
+		 * @param string $className The class name.
+		 * @return boolean True, if the class was successfully loaded.
+		 */
 		static public function autoload($className)
 		{
 			// Backward compatibility to PHP 5.2

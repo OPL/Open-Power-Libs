@@ -33,7 +33,7 @@
 		
 		static public function write($message)
 		{
-			echo '<div>'.$message.'</div>';
+			echo '<div>'.$message.'</div>'.PHP_EOL;
 		} // end write();
 		
 		static public function backtrace()
