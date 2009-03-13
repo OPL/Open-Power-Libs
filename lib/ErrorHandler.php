@@ -34,6 +34,10 @@
 		 */	
 		public function display(Opl_Exception $exception)
 		{
+			if(ob_get_level() > 0)
+			{
+				ob_end_clean();
+			}
 echo <<<EOF
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
