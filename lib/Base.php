@@ -256,12 +256,7 @@
 			// Manually mapped files support
 			if(isset(self::$_mappedFiles[$className]))
 			{
-				if(file_exists(self::$_mappedFiles[$className]))
-				{
-					require(self::$_mappedFiles[$className]);
-					return true;
-				}
-				return false;
+				require(self::$_mappedFiles[$className]);
 			}
 
 			// Automated mapping
