@@ -166,7 +166,7 @@
 				$this->_count--;
 				return array_shift($this->_data);
 			}
-			return NULL;	
+			return NULL;
 		} // end dequeue();
 
 		public function count()
