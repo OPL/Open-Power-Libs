@@ -1,0 +1,20 @@
+Title: mapLibrary()
+ShortTitle: Opl_Loader::mapLibrary()
+Reference: void Opl_Loader::mapLibrary( string $libraryName, string $directory )
+VersionSince: 2.0-beta2
+Status: static public
+
+----
+
+Maps the library `$libraryName` to the directory `$directory`. Since then, the autoloader tries to load the classes of this particular library from that directory, not from the path indicated by the `setDirectory()` method.
+
+Example:
+
+~~~~
+[php]
+Opl_Loader::setDirectory('../libs/');
+Opl_Loader::mapLibrary('Opx', '../special/path/');
+
+// The class is loaded from `../special/path/Class.php`
+$item = new Opx_Class;
+~~~~

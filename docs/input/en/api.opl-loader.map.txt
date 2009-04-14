@@ -1,17 +1,23 @@
 Title: map()
 ShortTitle: Opl_Loader::map()
-Reference: string Opl_Loader::map( string $className, string $file )
+Reference: void Opl_Loader::map( string $className, string $file )
 VersionSince: 2.0.0-dev7
 Status: static public
+SeeAlso:
+ - api.opl-loader.map-absolute
 
 ----
 
-The method maps the specified class name to the specified PHP file. If the script would like to create an object of this class, the autoloader will load the specified `$file` instead of the default one.
+Allows to specify the path to the class `$className` manually within its library directory.
 
 ~~~~
 [php]
-Opl_Loader::map('Opl_Some_Class', 'opl/somefile.php');
+Opl_Loader::setDirectory('../libs/');
+Opl_Loader::map('Opx_Some_Class', 'Sth/Else/Somefile.php');
 
-// This will load "opl/somefile.php" instead of "opl/some/class.php"
-$obj = new Opl_Some_Class;
+// Loads this class from `../libs/Opx/Sth/Else/Somefile.php`
+$obj = new Opx_Some_Class;
 ~~~~
+
+> [help]
+> To specify an absolute path, use [Opl_Loader::mapAbsolute()][api.opl-loader.map-absolute].

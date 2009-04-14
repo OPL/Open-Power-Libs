@@ -31,8 +31,13 @@
 			echo '<pre>'.htmlspecialchars(var_export($variable, true)).'</pre>';
 		} // end dump();
 		
-		static public function write($message)
+		static public function write($message, $console = false)
 		{
+			if($console)
+			{
+				echo $message.PHP_EOL;
+				return;
+			}
 			echo '<div>'.$message.'</div>'.PHP_EOL;
 		} // end write();
 		

@@ -10,4 +10,4 @@ The development versions of OPL can be downloaded from our Subversion repository
 Contributions
 =============
 
-You are encouraged to contribute and help developing the libraries. Most of the forms of contribution do not require any formalities. However, you must remember that OPL license, although is very convienient for the end users, does not cover automatically your code. Yes, you can send patches and other code submissions, but we cannot accept them to the SVN repository without a signed certificate. If you are interested in such a form of contribution, please contact with Invenzzia team by e-mail to get more information.
+See [Contributing](http://www.invenzzia.org/en/community/contributing)

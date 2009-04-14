@@ -3,7 +3,9 @@ ShortTitle: Opl_Loader::setDirectory()
 Reference: void Opl_Loader::setDirectory( string $directory )
 VersionSince: 2.0.0-dev7
 Status: static public
+SeeAlso:
+ - api.opl-loader.map-library
 
 ----
 
-Sets the directory, where the autoloader should look for class files. In PHP 5.2.x it also loads the SPL data structure emulation code.
+Sets the directory, where the autoloader should look for class files.

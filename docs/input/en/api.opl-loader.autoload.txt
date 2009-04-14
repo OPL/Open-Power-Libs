@@ -12,5 +12,5 @@ The class autoloading method. It has to be registered as an autoloader in order 
 
 ~~~~
 [php]
-spl_autoload_register(array('Opl_Loader', 'autoload'));
+Opl_Loader::register();
 ~~~~

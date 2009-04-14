@@ -1,0 +1,27 @@
+Title: mapAbsolute()
+ShortTitle: Opl_Loader::mapAbsolute()
+Reference: void Opl_Loader::map( string $className, string $file )
+VersionSince: 2.0-beta2
+Status: static public
+SeeAlso:
+ - api.opl-loader.map
+
+----
+
+Allows to specify the path to the class `$className` manually, ignoring the library directory settings.
+
+A comparison example:
+
+~~~~
+[php]
+Opl_Loader::setDirectory('../libs/');
+
+Opl_Loader::map('Opx_Class1', 'Some/File.php');
+Opl_Loader::mapAbsolute('Opx_Class2', '../libs2/file.php');
+
+// Loaded from `../libs/Opx/Some/File.php`
+$item = new Opx_Class1;
+
+// Loaded from `../libs2/file.php`
+$item = new Opx_Class2;
+~~~~

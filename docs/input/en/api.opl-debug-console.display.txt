@@ -1,0 +1,8 @@
+Title: display()
+ShortTitle: Opl_Debug_Console::display()
+Reference: void Opl_Debug_Console::display()
+Status: static public
+
+----
+
+Displays the debug console in the output.

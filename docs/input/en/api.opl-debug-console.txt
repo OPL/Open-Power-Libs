@@ -1,0 +1,5 @@
+Title: Opl_Debug_Console
+
+----
+
+This class provides the debug console services for the OPL libraries. It generates the debug console and provides an interface to add new data to the console.

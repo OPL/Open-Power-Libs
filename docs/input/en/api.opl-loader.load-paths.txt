@@ -1,0 +1,26 @@
+Title: loadPaths()
+ShortTitle: Opl_Loader::loadPaths()
+Reference: void Opl_Loader::loadPaths( String|Array $paths )
+VersionSince: 2.0.0-beta2
+Status: static public
+SeeAlso:
+ - api.opl-loader.set-directory
+ - api.opl-loader.map-library
+
+----
+
+Loads the path configuration from the array `$paths` or from the INI file, if `$paths` is a string with a valid filesystem path. A sample INI file:
+
+~~~~
+[ini]
+; The main path
+directory = "./"
+
+; Per-library paths
+[libraries]
+Opl = "/yourpath/Opl/lib/"
+Opt = "/yourpath/Opt/lib/"
+~~~~
+
+> [warning]
+> This method has been added only for development purposes. You should not use it in the production environment.

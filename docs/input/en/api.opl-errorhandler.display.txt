@@ -6,7 +6,7 @@ Status: public
 
 ----
 
-Displays the specified exception and applies context information filters, if necessary.
+Displays the specified exception and runs the informators, if necessary.
 
 ~~~~
 [php]

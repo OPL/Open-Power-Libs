@@ -2,7 +2,7 @@ Title: Standard installation
 
 ----
 
-Create a single directory for the OPL libraries code called "installation directory". Each OPL package contains an `/src` folder whose must be copied to the installation directory.
+Create a single directory for the OPL libraries code called "installation directory". Each OPL package contains an `/lib` folder whose must be copied to the installation directory.
 
 In order to use OPL libraries in your project, you need to load the core file and register an autoloader:
 
@@ -10,9 +10,9 @@ In order to use OPL libraries in your project, you need to load the core file an
 [php]
 <?php
 
-	require('../../lib/opl/base.php');
+	require('../../lib/Opl/Base.php');
 	Opl_Loader::setDirectory('../../lib/');
-	spl_autoload_register(array('Opl_Loader', 'autoload'));
+	Opl_Loader::register();
 
 	// use the libraries now
 ~~~~
@@ -21,9 +21,9 @@ OPL uses exceptions to report problems and errors. It is recommended to capture 
 
 ~~~~
 [php]
-	require('../../lib/opl/base.php');
+	require('../../lib/Opl/Base.php');
 	Opl_Loader::setDirectory('../../lib/');
-	spl_autoload_register(array('Opl_Loader', 'autoload'));
+	Opl_Loader::register();
 
 	try
 	{

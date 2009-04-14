@@ -1,0 +1,9 @@
+Title: assign()
+ShortTitle: Opl_Translation_Interface::assign()
+Reference: mixed Opl_Translation_Interface::assign( $group, $id, ... )
+VersionSince: 2.0.0-dev7
+Status: static public
+
+----
+
+Assigns the values provided as the extra arguments to the specified text `$id` in group `$group`. The method **should** also return the generated string.
