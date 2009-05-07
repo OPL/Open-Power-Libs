@@ -1,7 +1,6 @@
 <?php
 /*
  *  OPEN POWER LIBS <http://libs.invenzzia.org>
- *  ===========================================
  *
  * This file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE. It is also available through
@@ -26,13 +25,45 @@
 	/*
 	 * Class definitions
 	 */
-	
+
+	/**
+	 * The generic class autoloader.
+	 */
 	class Opl_Loader
-	{
-		static private $_mappedFiles = array();
-		static private $_mappedLibs = array();
-		static private $_initialized = array();
+	{	
+		/**
+		 * The default library handler
+		 * @var Callback
+		 */
+		static private $_handler = array('Opl_Loader', 'oplHandler');
+
+		/**
+		 * The main directory used by autoloader
+		 * @var String
+		 */
 		static private $_directory = '';
+		/**
+		 * The library-specific configuration.
+		 * @var Array
+		 */
+		static private $_libraries = array();
+
+		/**
+		 * The list of manually mapped files.
+		 * @var Array
+		 */
+		static private $_mappedFiles = array();
+
+		/**
+		 * The list of initialized OPL libraries.
+		 * @var Array
+		 */
+		static private $_initialized = array();
+
+		/**
+		 * If OPL has been loaded?
+		 * @var Boolean
+		 */
 		static private $_loaded = false;
 
 		/**
@@ -59,6 +90,27 @@
 			}
 			self::$_directory = $name;
 		} // end setDirectory();
+
+		/**
+		 * Sets the new default handler that will capture all the file calls to
+		 * support library-specific settings. The 'null' value removes the current
+		 * handler.
+		 *
+		 * @param Callback|Null $handler The new library handler.
+		 */
+		static public function setDefaultHandler($handler)
+		{
+			if(is_null($handler))
+			{
+				self::$_handler = null;
+				return;
+			}
+			if(!is_callable($handler, true))
+			{
+				throw new Opl_InvalidCallback_Exception();
+			}
+			self::$_handler = $handler;
+		} // end setDefaultHandler();
 
 		/**
 		 * Registers the autoloader.
@@ -124,6 +176,40 @@
 		} // end loadPaths();
 
 		/**
+		 * Configures the autoloader settings for the specific library.
+		 *
+		 * @param String $prefix The library prefix used by the classes.
+		 * @param Array $config The library configuration
+		 */
+		static public function addLibrary($prefix, Array $config)
+		{
+			if(isset($config['directory']))
+			{
+				if($config['directory'] != '')
+				{
+					if($config['directory'][strlen($config['directory'])-1] != '/')
+					{
+						$config['directory'] .= '/';
+					}
+				}
+			}
+			self::$_libraries[$prefix] = $config;
+		} // end addLibrary();
+
+		/**
+		 * Removes the library-specific settings for the library.
+		 *
+		 * @param String $prefix The library prefix used by the classes
+		 */
+		static public function removeLibrary($prefix)
+		{
+			if(isset(self::$_libraries[$prefix]))
+			{
+				unset(self::$_libraries[$prefix]);
+			}
+		} // end removeLibrary();
+
+		/**
 		 * Allows to specify a directory for a single OPL library.
 		 *
 		 * @param string $libraryName The three-letter library code.
@@ -131,14 +217,7 @@
 		 */
 		static public function mapLibrary($libraryName, $directory)
 		{
-			if($directory != '')
-			{
-				if($directory[strlen($directory)-1] != '/')
-				{
-					$directory .= '/';
-				}
-			}
-			self::$_mappedLibs[$libraryName] = $directory;
+			self::addLibrary($libraryName, array('directory' => $directory));
 		} // end mapLibrary();
 
 		/**
@@ -155,22 +234,15 @@
 			if(is_null($library))
 			{
 				// Determine the library name according to the class name.
-				$name = substr($className, 0, 3);
-				if(strpos($name, 'Op') !== 0)
+				$id = strpos($className, '_');
+				if($id === false)
 				{
 					throw new Opl_InvalidClass_Exception($className);
 				}
-				$library = $name;
+				$library = substr($className, 0, $id);
 			}
 
-			if(isset(self::$_mappedLibs[$library]))
-			{
-				self::$_mappedFiles[$className] = self::$_mappedLibs[$library].$file;
-			}
-			else
-			{
-				self::$_mappedFiles[$className] = self::$_directory.$file;
-			}
+			self::$_mappedFiles[$className] = self::_getLibraryPath($library).$file;
 		} // end map();
 
 		/**
@@ -203,6 +275,49 @@
 		 */
 		static public function autoload($className)
 		{
+			// Manually mapped files support
+			if(isset(self::$_mappedFiles[$className]))
+			{
+				require(self::$_mappedFiles[$className]);
+			}
+
+			$id = strpos($className, '_');
+			if($id === false)
+			{
+				return false;
+			}
+			$library = substr($className, 0, $id);
+
+			// If the handler is configured, allow the handler to do something.
+			$handler = self::_getLibraryHandler($library);
+			$ok = true;
+			if(!is_null($handler))
+			{
+				$ok = call_user_func($handler, $library, $className);
+			}
+
+			// Load the file.
+			if($ok)
+			{
+				$file = self::_getLibraryPath($library).str_replace('_', DIRECTORY_SEPARATOR, substr($className, $id+1, strlen($className) - $id - 1)).'.php';
+				if(file_exists($file))
+				{
+					require($file);
+					return true;
+				}
+			}
+			return false;
+		} // end autoload();
+
+		/**
+		 * The OPL libraries handler that provides the OPL-specific autoloading
+		 * issues.
+		 *
+		 * @param Array $item The requested item.
+		 * @param Boolean
+		 */
+		static public function oplHandler($library, $className)
+		{
 			// Backward compatibility to PHP 5.2
 			// This allows to load the compatibility classes even if some parts of OPL are
 			// loaded by different autoloader.
@@ -210,73 +325,82 @@
 			{
 				if(version_compare(phpversion(), '5.3.0-dev', '<'))
 				{
-					require((isset(self::$_mappedLibs['Opl']) ? self::$_mappedLibs['Opl'] : self::$_directory.'Opl/').'Php52.php');
+					require(self::_getLibraryPath('Opl').'Php52.php');
 				}
 				self::$_loaded = true;
 				if(class_exists($className, false) || interface_exists($className, false))
 				{
-					return true;
+					return false;
 				}
 			}
-
-			// Later, only the OPL classes go.
-			if(strpos($className, 'Op') !== 0)
+			if($className == $library.'_Class')
 			{
-				return false;
+				self::$_initialized[$library] = true;
+				return true;
 			}
-			$items = explode('_', $className);
-			if(strlen($items[0]) != 3)
-			{
-				return false;
-			}
-			// Determine the library path
-			if(isset(self::$_mappedLibs[$items[0]]))
-			{
-				$base = self::$_mappedLibs[$items[0]];
-			}
-			else
-			{
-				$base = self::$_directory.$items[0].'/';
-			}
-			
+			$base = self::_getLibraryPath($library);
 			// Load the base library file, if not loaded yet.
-			if(!isset(self::$_initialized[$items[0]]))
+			if(!isset(self::$_initialized[$library]))
 			{
 				if(file_exists($base.'Class.php'))
 				{
 					require($base.'Class.php');
 				}
-				self::$_initialized[$items[0]] = true;
+				self::$_initialized[$library] = true;
 				if(class_exists($className, false) || interface_exists($className, false))
 				{
-					return true;
+					return false;
 				}
 			}
 
-			// Manually mapped files support
-			if(isset(self::$_mappedFiles[$className]))
-			{
-				require(self::$_mappedFiles[$className]);
-			}
-
-			// Automated mapping
-			if(end($items) == 'Exception')
+			// This is the exception.
+			$id = strrpos($className, '_');
+			if(substr($className, $id+1, 9) == 'Exception')
 			{
 				require($base.'Exception.php');
-				return true;
+				return false;
 			}
-			else
+			// Everything is done.
+			return true;
+		} // end oplHandler();
+
+		/**
+		 * Returns the path for the specified library.
+		 *
+		 * @internal
+		 * @param String $library The library
+		 * @return String
+		 */
+		static protected function _getLibraryPath($library)
+		{
+			if(isset(self::$_libraries[$library]))
 			{
-				unset($items[0]);
-				$base .= implode($items, DIRECTORY_SEPARATOR).'.php';
-				if(file_exists($base))
+				if(isset(self::$_libraries[$library]['directory']))
 				{
-					require($base);
-					return true;
+					return self::$_libraries[$library]['directory'];
 				}
 			}
-			return false;
-		} // end autoload();
+			return self::$_directory.$library.'/';
+		} // end _getLibraryPath();
+
+		/**
+		 * Returns the handler for the specified library.
+		 *
+		 * @internal
+		 * @param String $library The library
+		 * @return Callback
+		 */
+		static protected function _getLibraryHandler($library)
+		{
+			if(isset(self::$_libraries[$library]))
+			{
+				if(array_key_exists('handler', self::$_libraries[$library]))
+				{
+					return self::$_libraries[$library]['handler'];
+				}
+			}
+			return self::$_handler;
+		} // end _getLibraryPath();
 	} // end Opl_Loader;
 	
 	class Opl_Registry
@@ -284,11 +408,24 @@
 		static private $_objects = array();
 		static private $_states = array();		
 
+		/**
+		 * Registers a new object in the registry.
+		 *
+		 * @param String $name The object key
+		 * @param Object $object The registered object
+		 */
 		static public function register($name, $object)
 		{
 			self::$_objects[$name] = $object;
 		} // end register();
-		
+
+		/**
+		 * Returns the previously registered object. If the object does not
+		 * exist, it throws an exception.
+		 *
+		 * @param String $name The registered object key.
+		 * @return Object
+		 */
 		static public function get($name)
 		{
 			if(!isset(self::$_objects[$name]))
@@ -297,17 +434,36 @@
 			}
 			return self::$_objects[$name];
 		} // end get();
-		
+
+		/**
+		 * Check whether there is an object registered under a specified key.
+		 *
+		 * @param String $name The object key
+		 * @return Boolean
+		 */
 		static public function exists($name)
 		{
 			return isset(self::$_objects[$name]);
 		} // end exists();
-		
+
+		/**
+		 * Sets the state variable in the registry
+		 *
+		 * @param String $name The variable name
+		 * @param Mixed $value The variable value
+		 */
 		static public function setState($name, $value)
 		{
 			self::$_states[$name] = $value;
 		} // end setState();
-		
+
+		/**
+		 * Returns the state variable from the registry. If the
+		 * variable does not exist, it returns NULL.
+		 *
+		 * @param String $name The variable name
+		 * @return Mixed
+		 */
 		static public function getState($name)
 		{
 			if(!isset(self::$_states[$name]))
@@ -328,6 +484,12 @@
 		// The rest of the configuration
 		protected $_config = array();
 
+		/**
+		 * Returns the specified configuration property value.
+		 *
+		 * @param String $name The property name
+		 * @return Mixed
+		 */
 		public function __get($name)
 		{
 			if($name[0] == '_')
@@ -341,6 +503,13 @@
 			return $this->_config[$name];
 		} // __get();
 
+		/**
+		 * Sets the custom configuration property value.
+		 *
+		 * @param String $name The property name
+		 * @param Mixed $value The property value
+		 * @return Mixed
+		 */
 		public function __set($name, $value)
 		{
 			if($name[0] == '_')
@@ -351,6 +520,12 @@
 			$this->_config[$name] = $value;
 		} // end __set();
 
+		/**
+		 * Loads the configuration from external array or INI file.
+		 *
+		 * @param String|Array $config The configuration option values or the INI filename.
+		 * @return Boolean
+		 */
 		public function loadConfig($config)
 		{
 			if(is_string($config))
@@ -379,7 +554,12 @@
 			}
 			return true;
 		} // end loadConfig();
-		
+
+		/**
+		 * Returns the configuration as an array.
+		 *
+		 * @return Array
+		 */
 		public function getConfig()
 		{
 			$vars = $this->_config;
@@ -393,7 +573,10 @@
 			}
 			return $vars;
 		} // end getConfig();
-		
+
+		/**
+		 * Loads the plugins from the directories specified in the class configuration.
+		 */
 		public function loadPlugins()
 		{
 			if(is_string($this->pluginDir))
@@ -485,12 +668,29 @@
 			
 			require($dataFile);
 		} // end loadPlugins();
-		
+
+		/**
+		 * The method allows to define the specific plugin loading settings for the
+		 * library. Because the results are cached in order not to exhaust the server
+		 * resources, the method must return a PHP code that loads the specified plugin.
+		 *
+		 * @internal
+		 * @param String $directory The plugin location
+		 * @param SplFileInfo $file The plugin file information
+		 * @return String
+		 */
 		protected function _pluginLoader($directory, SplFileInfo $file)
 		{
 			return '';
 		} // end _pluginLoader();
-		
+
+		/**
+		 * The method allows to secure the path by adding an ending slash, if
+		 * it is not specified.
+		 *
+		 * @internal
+		 * @param String &$path The path to secure.
+		 */
 		protected function _securePath(&$path)
 		{
 			if($path[strlen($path)-1] != '/')

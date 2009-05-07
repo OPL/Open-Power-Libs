@@ -1,0 +1,12 @@
+Title: oplHandler()
+ShortTitle: Opl_Loader::oplHandler()
+Reference: boolean oplHandler(string $library, string $className);
+Status: static public
+VersionSince: 2.0-RC1
+SeeAlso:
+ - api.opl-loader.set-default-handler
+ - api.opl-loader.add-library
+
+----
+
+The OPL autoloading handler which is enabled by default in the autoloader.

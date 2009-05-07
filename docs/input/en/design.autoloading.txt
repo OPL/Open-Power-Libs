@@ -1,0 +1,88 @@
+Title: Autoloading
+SeeAlso:
+ - api.opl-loader
+
+----
+
+The OPL core provides its own general-purpose autoloader designed to handle the libraries that use the `Foo_Bar_Joe` class naming format. The autoloader provides an abstraction layer for the automatic class loading using various rules. Thus, you do not have to remember, how a certain library is organized and where the required classes are really located.
+
+The autoloading process
+=======================
+
+The autoloader is not limited to OPL libraries. Using it, you can also handle third party pieces of code, if they follow similar naming conventions, for example Zend Framework or Doctrine. The autoloader groups the classes into *libraries*, using the first part of the name. The class `Foo_Bar` is assumed to be a part of `Foo` library.
+
+The autoloader features:
+
+* Specifying the location of all the libraries.
+* Specifying an extra handler to deal with library-specific autoloading needs (i.e. loading models in ORM).
+* Specifying per-library settings: the location and handler.
+* Mapping single classes to specific locations in the filesystem.
+
+> [information]
+> Currently, the autoloader does not support PHP 5.3 namespaces, however, they will be introduced very soon.
+
+The common configuration
+========================
+
+Let's create a common autoloader configuration:
+
+~~~~
+[php]
+// The autoloader itself must be loaded manually
+require('./libs/Opl/Base.php');
+
+Opl_Loader::register();
+Opl_Loader::setDirectory('./libs/');
+Opl_Loader::setDefaultHandler(array('Opl_Loader', 'oplHandler'));
+
+// Now we can load the classes
+~~~~
+
+The code snippet above configures the common autoloading settings for all the libraries:
+
+* The libraries are located in `./libs/` directory (for example: `./libs/Opl/` or `./libs/Foo`).
+* All the class loading requests go through the OPL handler.
+
+> [help]
+> In this example, the `setDefaultHandler()` does not have to be used, as this handler is active by default.
+
+Library-specific settings
+=========================
+
+The last example has one disadvantage: the libraries that do not belong to OPL project probably won't want to follow the rules specified by the OPL handler. In this case we can configure everything manually:
+
+~~~~
+[php]
+// The autoloader itself must be loaded manually
+require('./libs/Opl/Base.php');
+
+Opl_Loader::register();
+Opl_Loader::setDirectory('./libs/');
+Opl_Loader::setDefaultHandler(null);
+
+Opl_Loader::addLibrary('Opl', array('handler' => array('Opl_Loader', 'oplHandler')));
+Opl_Loader::addLibrary('Opt', array('handler' => array('Opl_Loader', 'oplHandler')));
+Opl_Loader::addLibrary('Doctrine', array('directory' => './libs/Doctrine/', 'handler' => 'doctrineModelLoader')));
+
+// Now we can load the classes
+~~~~
+
+Both OPL and OPT use the OPL handler and we have configured it for them. Zend Framework may work with the default settings, so it does not appear on the list, and in case of Doctrine we must choose a subdirectory because of the organization of this project, and furthermore, add some function that will load the models for us.
+
+PHAR-s
+======
+
+The autoloader can easily work with PHAR archives:
+
+~~~~
+[php]
+require('./libs/opl.phar');
+require('./libs/opt.phar');
+~~~~
+
+Yes, it is so simple, because PHAR-s are self-configurable and their stubs may automatically set the necessary options and handlers.
+
+Conclusion
+==========
+
+As we can see, the OPL autoloader is a quite powerful tool that is able to help you managing the increasing number of classes and files.

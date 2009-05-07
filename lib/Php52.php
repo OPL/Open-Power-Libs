@@ -52,7 +52,7 @@
 				$this->_count--;
 				return array_pop($this->_data);
 			}
-			return NULL;
+			throw new RuntimeException('Can\'t pop from an empty datastructure');
 		} // end pop();
 
 		public function top()
@@ -166,7 +166,7 @@
 				$this->_count--;
 				return array_shift($this->_data);
 			}
-			return NULL;
+			throw new RuntimeException('Can\'t shift from an empty datastructure');
 		} // end dequeue();
 
 		public function count()

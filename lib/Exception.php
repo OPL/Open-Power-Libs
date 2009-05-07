@@ -83,8 +83,13 @@
 
 	class Opl_InvalidClass_Exception extends Opl_Filesystem_Exception
 	{
-		protected $_message = '"%s" is not a valid OPL class name.';
+		protected $_message = '"%s" is not a valid class name.';
 	} // end Opl_Not_Writeable_Exception;
+
+	class Opl_InvalidCallback_Exception extends Opl_Exception
+	{
+		protected $_message = 'The specified library handler is not a valid PHP callback.';
+	} // end Opl_InvalidCallback_Exception;
 	
 	/*
 	 * Debugger exceptions
