@@ -8,11 +8,11 @@ PHAR archives solve some problems with the directory structure and the initializ
 [php]
 <?php
 
-	require('./opl.phar');
-	require('./opt.phar');
-	require('./opf.phar');
+require('./opl.phar');
+require('./opt.phar');
+require('./opf.phar');
 
-	// use the libraries now
+// use the libraries now
 ~~~~
 
 All the initialization is done automatically. 
@@ -26,10 +26,10 @@ You will still need the directory structure described in the previous chapter, i
 [php]
 <?php
 
-	require('./opl.phar');
-	require('./opt.phar');
-	require('./opf.phar');
-	Opl_Loader::setDirectory('./opl_dir/');
+require('./opl.phar');
+require('./opt.phar');
+require('./opf.phar');
+Opl_Loader::setDirectory('./opl_dir/');
 
-	// your code goes here
+// your code goes here
 ~~~~

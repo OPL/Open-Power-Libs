@@ -21,7 +21,7 @@
 	{
 		public function _($group, $id);
 		public function assign($group, $id);
-	} // end Opt_Translation_Interface;
+	} // end Opl_Translation_Interface;
 
 	/*
 	 * Class definitions
@@ -204,7 +204,7 @@
 		static public function autoload($className)
 		{
 			// Backward compatibility to PHP 5.2
-			// This allows to load the compatibility classes even if some parts of OPT are
+			// This allows to load the compatibility classes even if some parts of OPL are
 			// loaded by different autoloader.
 			if(!self::$_loaded)
 			{
@@ -219,7 +219,7 @@
 				}
 			}
 
-			// Later, only the OPT classes go.
+			// Later, only the OPL classes go.
 			if(strpos($className, 'Op') !== 0)
 			{
 				return false;

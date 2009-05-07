@@ -10,27 +10,27 @@ In order to use OPL libraries in your project, you need to load the core file an
 [php]
 <?php
 
-	require('../../lib/Opl/Base.php');
-	Opl_Loader::setDirectory('../../lib/');
-	Opl_Loader::register();
+require('../../lib/Opl/Base.php');
+Opl_Loader::setDirectory('../../lib/');
+Opl_Loader::register();
 
-	// use the libraries now
+// use the libraries now
 ~~~~
 
 OPL uses exceptions to report problems and errors. It is recommended to capture them. The basic exception class used by the libraries is `Opl_Exception`, but each of the libraries provides also its own class. OPL contains also the default exception handler:
 
 ~~~~
 [php]
-	require('../../lib/Opl/Base.php');
-	Opl_Loader::setDirectory('../../lib/');
-	Opl_Loader::register();
+require('../../lib/Opl/Base.php');
+Opl_Loader::setDirectory('../../lib/');
+Opl_Loader::register();
 
-	try
-	{
-		// your code
-	}
-	catch(Opl_Exception $exception)
-	{
-		Opl_Error_Handler($exception);
-	}
+try
+{
+    // your code
+}
+catch(Opl_Exception $exception)
+{
+    Opl_Error_Handler($exception);
+}
 ~~~~

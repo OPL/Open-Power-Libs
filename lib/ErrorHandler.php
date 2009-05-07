@@ -39,58 +39,61 @@
 				ob_end_clean();
 			}
 echo <<<EOF
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
-  	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  	<title>{$this->_library} error</title>
-  	<style type="text/css">
-  	
-html, body{ font-family: Arial, Nimbus Sans, Verdana, Lucida, Helvetica, sans-serif; font-size: 10pt; background: #faffe6; }
-div#frame{ width: 500px; margin-top: 150px; margin-left: auto; margin-right: auto; padding: 2px; }
-div#frame h1{ font-size: 13px; text-align: center; padding: 3px; margin: 2px 0; background: #ffffff; border-top: 4px solid #e60066; }
-div#frame div.object{ border: 1px solid #ffdecc; background: #ffeeee; padding: 0; }
-div#frame div.object div{ border-left: 15px solid #e33a3a; padding: 3px; padding-left: 12px; margin: 0; }
-p{ margin-top: 2px; margin-bottom: 2px; padding: 0; }
-p.message { font-size: 14px; }
-p:hover{ background: #ffdddd; }
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>{$this->_library} error</title>
+<style type="text/css">
+/* <![CDATA[ */
+html, body{ font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif; margin: 0; padding: 0; font-size: 10pt; background: #ffffff; color: #222222 }
+div#frame{ width: 700px; margin-top: 100px; margin-left: auto; margin-right: auto; padding: 2px; }
+div#frame h1{ font-size: 16pt; text-align: center; padding: 10px; margin: 2px 0; background: #ffffff; border-top: 4px solid #e60066; }
+div#frame div.object{ border: 1px solid #ffdecc; margin: 2px 0;background: #ffeeee; padding: 0; }
+div#frame div.object div{ /*border-left: 15px solid #e33a3a;*/ margin: 0; padding: 1px; }
+p{padding: 5px; margin: 5px 0;}
+p.message { font-size: 13pt; }
 p.code{ font-weight: bold; }
-p span{ float: right; margin-right: 6px; font-variant: small-caps; }
-p.call{ width: 100%; text-align: right; border-top: 1px solid #e33a3a; }
-p.call span{ float: none; margin-right: 0; font-style: italic; }
+p span{ margin-right: 6px; }
+p.call{ border-top: 1px solid #e33a3a; margin: 5px; padding: 5px 0; }
+p.call span{ float: none; margin-right: 0; font-family: 'Courier New', Courier, monospaced;  font-size: 12px; }
 p.directive span{ font-weight: bold; }
 p.directive span.good{ color: #009900; }
 p.directive span.maybe{ color: #777700; }
 p.directive span.bad{ color: #770000; }
 p.important{ font-weight: bold; text-align: center; width:100%; }
 p.warning span{	float: left; margin-right: 12px; font-weight: bold; }
+a {font-weight: bold; color: #000000}
+a:hover {}
+ul {list-style: none; margin: 5px 15px; padding: 0}
+ul li {margin: 0; padding: 0}
+ul li p {padding:0;}
 
 li { margin-top: 2px; margin-bottom: 2px; padding: 0; }
-li:hover{ background: #ffdddd; }
 li.value { font-weight: bold; }
-li span{ float: right; margin-right: 6px; font-variant: small-caps; }
+li span{  margin-right: 6px; }
 li.value span.good{ color: #009900; }
 li.value span.maybe{ color: #777700; }
 li.value span.bad{ color: #770000; }
 
-code{ font-family: Courier, Courier New; background: #ffdddd;  }
-  	</style>  
-  </head>
-  <body>
-  
-  	<div id="frame">
-  	
-  		<h1>{$this->_library} error</h1>
-  		<div class="object"><div>
+code{ font-family: 'Courier New', Courier, monospaced; background: #ffdddd;  }
+/* ]]> */
+</style>  
+</head>
+<body>
+
+<div id="frame">
+	<h1>{$this->_library} error</h1>
+	<div class="object"><div>
  
 EOF;
-	echo '  			<p class="message">'.$exception->getMessage()."</p>\r\n";
-	echo '  			<p class="code">Type: <span>'.get_class($exception)."</span></p>\r\n";
+	echo '  			<p class="message">'.htmlspecialchars($exception->getMessage())."</p>\r\n";
+	echo '  			<p class="code">'.get_class($exception)."</p>\r\n";
 	if(Opl_Registry::getState('opl_extended_errors'))
 	{
 		
-		echo '  			<p class="call">In <span>'.$exception->getFile().'</span> on line <span>'.$exception->getLine()."</span></p>\r\n";
+		echo '  			<p class="call"><span>'.$exception->getFile().'</span> [<span>'.$exception->getLine()."</span>]</p>\r\n";
 	}
 	else
 	{
@@ -105,9 +108,9 @@ EOF;
 		echo "  		</div></div>\r\n";
 	}
 	echo <<<EOF
-  	</div>
-  </body>
- </html>
+</div>
+</body>
+</html>
 EOF;
 		} // end display();
 	
@@ -170,6 +173,8 @@ EOF;
 				'file' => $exception->getFile(),
 				'line' => $exception->getLine()
 			);
+			$size = sizeof($data);
+            echo "		<ul>";
 			while(sizeof($data) > 0)
 			{
 				$item = array_shift($data);
@@ -178,12 +183,14 @@ EOF;
 
 				if(sizeof($data) == 0)
 				{
-					echo "		<p class=\"directive\">".$name."() <span class=\"bad\">".basename($item['file']).':'.$item['line']."</span></p>\r\n";
+					echo "		<li><p class=\"directive\">".$size.". ".$name."() - <span class=\"bad\"><code>".basename($item['file']).'</code> ['.$item['line']."]</span></p></li>\r\n";
 				}
 				else
 				{
-					echo "		<p class=\"directive\">".$name."() <span>".basename($item['file']).':'.$item['line']."</span></p>\r\n";
+					echo "		<li><p class=\"directive\">".$size.". ".$name."() - <span><code>".basename($item['file']).'</code> ['.$item['line']."]</span></p></li>\r\n";
 				}
+				$size--;
 			}
+            echo "		</ul>";
 		} // end _printBacktrace();
 	} // end Opl_ErrorHandler;
