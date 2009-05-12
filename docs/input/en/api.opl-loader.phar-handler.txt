@@ -1,0 +1,13 @@
+Title: pharHandler()
+ShortTitle: Opl_Loader::pharHandler()
+Reference: boolean pharHandler(string $library, string $className);
+Status: static public
+VersionSince: 2.0-RC1
+SeeAlso:
+ - api.opl-loader.set-default-handler
+ - api.opl-loader.add-library
+ - api.opl-loader.opl-handler
+
+----
+
+The OPL autoloading handler used by the PHAR-s.

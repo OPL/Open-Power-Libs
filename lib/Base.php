@@ -9,7 +9,7 @@
  * Copyright (c) 2008 Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id: Base.php 24 2008-12-07 10:57:26Z extremo $
+ * $Id$
  */
 
 	/*
@@ -65,6 +65,12 @@
 		 * @var Boolean
 		 */
 		static private $_loaded = false;
+
+		/**
+		 * Checking if the file exists status.
+		 * @var Boolean
+		 */
+		static private $_fileCheck = false;
 
 		/**
 		 * Specifies a directory path to the OPL libraries.
@@ -129,6 +135,18 @@
 		{
 			return self::_directory;
 		} // end getDirectory();
+
+		/**
+		 * Allows to enable or disable the file existence checking by
+		 * the autoloader. Note that for the performance reasons, the
+		 * checking should be disabled in the production environment.
+		 *
+		 * @param Boolean $status The new status
+		 */
+		static public function setCheckFileExists($status)
+		{
+			self::$_fileCheck = $status;
+		} // end setCheckFileExists();
 
 		/**
 		 * Allows to load the path list for the libraries either from an
@@ -291,7 +309,7 @@
 			// If the handler is configured, allow the handler to do something.
 			$handler = self::_getLibraryHandler($library);
 			$ok = true;
-			if(!is_null($handler))
+			if($handler !== null)
 			{
 				$ok = call_user_func($handler, $library, $className);
 			}
@@ -299,8 +317,16 @@
 			// Load the file.
 			if($ok)
 			{
-				$file = self::_getLibraryPath($library).str_replace('_', DIRECTORY_SEPARATOR, substr($className, $id+1, strlen($className) - $id - 1)).'.php';
-				if(file_exists($file))
+				$file = self::getLibraryPath($library).str_replace('_', DIRECTORY_SEPARATOR, substr($className, $id+1, strlen($className) - $id - 1)).'.php';
+				if(self::$_fileCheck == true)
+				{
+					if(file_exists($file))
+					{
+						require($file);
+						return true;
+					}
+				}
+				else
 				{
 					require($file);
 					return true;
@@ -325,7 +351,7 @@
 			{
 				if(version_compare(phpversion(), '5.3.0-dev', '<'))
 				{
-					require(self::_getLibraryPath('Opl').'Php52.php');
+					require(self::getLibraryPath('Opl').'Php52.php');
 				}
 				self::$_loaded = true;
 				if(class_exists($className, false) || interface_exists($className, false))
@@ -338,11 +364,11 @@
 				self::$_initialized[$library] = true;
 				return true;
 			}
-			$base = self::_getLibraryPath($library);
+			$base = self::getLibraryPath($library);
 			// Load the base library file, if not loaded yet.
 			if(!isset(self::$_initialized[$library]))
 			{
-				if(file_exists($base.'Class.php'))
+				if($library != 'Opc' && $library != 'Opl')
 				{
 					require($base.'Class.php');
 				}
@@ -365,13 +391,33 @@
 		} // end oplHandler();
 
 		/**
+		 * This method handles PHAR-s. Their initialization procedure is a bit
+		 * different, so we do not need so much code.
+		 *
+		 * @param String $library The library name
+		 * @param String $className The class name
+		 * @return Boolean
+		 */
+		static public function pharHandler($library, $className)
+		{
+			// This is the exception.
+			$id = strrpos($className, '_');
+			if(substr($className, $id+1, 9) == 'Exception')
+			{
+				require($base.'Exception.php');
+				return false;
+			}
+			// Everything is done.
+			return true;
+		} // end pharHandler();
+
+		/**
 		 * Returns the path for the specified library.
 		 *
-		 * @internal
 		 * @param String $library The library
 		 * @return String
 		 */
-		static protected function _getLibraryPath($library)
+		static public function getLibraryPath($library)
 		{
 			if(isset(self::$_libraries[$library]))
 			{
@@ -381,7 +427,7 @@
 				}
 			}
 			return self::$_directory.$library.'/';
-		} // end _getLibraryPath();
+		} // end getLibraryPath();
 
 		/**
 		 * Returns the handler for the specified library.

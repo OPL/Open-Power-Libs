@@ -6,6 +6,7 @@ VersionSince: 2.0-RC1
 SeeAlso:
  - api.opl-loader.set-default-handler
  - api.opl-loader.add-library
+ - api.opl-loader.phar-handler
 
 ----
 
