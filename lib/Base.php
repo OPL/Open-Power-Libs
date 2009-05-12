@@ -260,7 +260,7 @@
 				$library = substr($className, 0, $id);
 			}
 
-			self::$_mappedFiles[$className] = self::_getLibraryPath($library).$file;
+			self::$_mappedFiles[$className] = self::getLibraryPath($library).$file;
 		} // end map();
 
 		/**
@@ -297,6 +297,7 @@
 			if(isset(self::$_mappedFiles[$className]))
 			{
 				require(self::$_mappedFiles[$className]);
+				return true;
 			}
 
 			$id = strpos($className, '_');
