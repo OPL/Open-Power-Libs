@@ -120,7 +120,7 @@ EOF;
 			if(!isset($this->_context[$use]))
 			{
 				$use = '__UNKNOWN__';
-			}
+			}      
 			foreach($this->_context[$use] as $name => $config)
 			{
 				if(!method_exists($this, '_print'.$name))

@@ -12,9 +12,8 @@ The method is used, when the temporary plugin file is being rebuilt. It takes th
 
 ~~~~
 [php]
-
-	protected function _pluginLoader($dir, $file)
-	{
-		return 'require(\''.$dir.$file.'\'); ';
-	} // end _pluginLoader();
+protected function _pluginLoader($dir, $file)
+{
+    return 'require(\''.$dir.$file.'\'); ';
+} // end _pluginLoader();
 ~~~~

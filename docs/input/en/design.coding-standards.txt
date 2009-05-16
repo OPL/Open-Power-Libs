@@ -23,7 +23,7 @@ The file is divided into several parts marked by comment. The code template is:
 <?php
 /*
  *  OPEN POWER LIBS <http://www.invenzzia.org>
- *  ===========================================
+ *  ==========================================
  *
  * This file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE. It is also available through
@@ -32,30 +32,30 @@ The file is divided into several parts marked by comment. The code template is:
  * Copyright (c) 2008 Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id: design.coding-standards.txt 13 2008-09-19 11:14:40Z zyxist $
+ * $Id$
  */
 
 /*
  * Optional file description
  */
 
-	/*
-	 * Function definitions
-	 */
+/*
+ * Function definitions
+ */
 
-	// code here
+// code here
 
-	/*
-	 * Interface definitions
-	 */
+/*
+ * Interface definitions
+ */
 
-	// code here
+// code here
 
-	/*
-	 * Class definitions
-	 */
+/*
+ * Class definitions
+ */
 
-	// code here
+// code here
 ~~~~
 
 Feel free to remove the parts you do not use.
@@ -117,17 +117,16 @@ Opening curly brackets **must** be in a separate line:
 ~~~~
 [php]
 <?php
+// Good
+class Opx_Foo
+{
 
-	// Good
-	class Opx_Foo
-	{
+}
 
-	}
+// Veeery bad, die, go to hell!
+class Opx_Bar{
 
-	// Veeery bad, die, go to hell!
-	class Opx_Bar{
-
-	}
+}
 ~~~~
 
 Class and interface closing curly brackets **must** be accompanied with the class/interface name written in the single line comment that looks like this: `// end classname;`
@@ -135,10 +134,10 @@ Class and interface closing curly brackets **must** be accompanied with the clas
 ~~~~
 [php]
 <?php
-	class Opx_Foo
-	{
+class Opx_Foo
+{
 
-	} // end Opx_Foo;
+} // end Opx_Foo;
 ~~~~
 
 The methods must follow it as well, but here we add also the round brackets to indicate what it is:
@@ -146,14 +145,14 @@ The methods must follow it as well, but here we add also the round brackets to i
 ~~~~
 [php]
 <?php
-	class Opx_Foo
-	{
-		public function foo()
-		{
+class Opx_Foo
+{
+    public function foo()
+    {
 
-		} // end foo();
+    } // end foo();
 
-	} // end Opx_Foo;
+} // end Opx_Foo;
 ~~~~
 
 All of the class items **must** have the visibility modifier: `public`, `protected` or `private`. You **must not** use `var` keyword or write methods without a `public` modifier.
