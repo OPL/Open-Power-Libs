@@ -174,7 +174,7 @@ EOF;
 				'line' => $exception->getLine()
 			);
 			$size = sizeof($data);
-            echo "		<ul>";
+			echo "		<ul>";
 			while(sizeof($data) > 0)
 			{
 				$item = array_shift($data);
@@ -191,6 +191,6 @@ EOF;
 				}
 				$size--;
 			}
-            echo "		</ul>";
+			echo "		</ul>";
 		} // end _printBacktrace();
 	} // end Opl_ErrorHandler;
