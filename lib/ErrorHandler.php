@@ -47,43 +47,43 @@ echo <<<EOF
 <title>{$this->_library} error</title>
 <style type="text/css">
 /* <![CDATA[ */
-html, body{ font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif; margin: 0; padding: 0; font-size: 10pt; background: #ffffff; color: #222222 }
-div#frame{ width: 700px; margin-top: 100px; margin-left: auto; margin-right: auto; padding: 2px; }
-div#frame h1{ font-size: 16pt; text-align: center; padding: 10px; margin: 2px 0; background: #ffffff; border-top: 4px solid #e60066; }
-div#frame div.object{ border: 1px solid #ffdecc; margin: 2px 0;background: #ffeeee; padding: 0; }
-div#frame div.object div{ /*border-left: 15px solid #e33a3a;*/ margin: 0; padding: 1px; }
-p{padding: 5px; margin: 5px 0;}
-p.message { font-size: 13pt; }
-p.code{ font-weight: bold; }
-p span{ margin-right: 6px; }
-p.call{ border-top: 1px solid #e33a3a; margin: 5px; padding: 5px 0; }
-p.call span{ float: none; margin-right: 0; font-family: 'Courier New', Courier, monospaced;  font-size: 12px; }
-p.directive span{ font-weight: bold; }
-p.directive span.good{ color: #009900; }
-p.directive span.maybe{ color: #777700; }
-p.directive span.bad{ color: #770000; }
-p.important{ font-weight: bold; text-align: center; width:100%; }
-p.warning span{	float: left; margin-right: 12px; font-weight: bold; }
-a {font-weight: bold; color: #000000}
-a:hover {}
-ul {list-style: none; margin: 5px 15px; padding: 0}
-ul li {margin: 0; padding: 0}
-ul li p {padding:0;}
+html, body{  margin: 0; padding: 0; font-size: 10pt; background: #ffffff;  }
+div#oplErrorFrame { font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif; color: #222222; width: 700px; margin-top: 100px; margin-left: auto; margin-right: auto; padding: 2px; }
+div#oplErrorFrame h1{ font-size: 16pt; text-align: center; padding: 10px; margin: 2px 0; background: #ffffff; border-top: 4px solid #e60066; }
+div#oplErrorFrame div.object{ border: 1px solid #ffdecc; margin: 2px 0;background: #ffeeee; padding: 0; }
+div#oplErrorFrame div.object div{ /*border-left: 15px solid #e33a3a;*/ margin: 0; padding: 1px; }
+div#oplErrorFrame p{padding: 5px; margin: 5px 0;}
+div#oplErrorFrame p.message { font-size: 13pt; }
+div#oplErrorFrame p.code{ font-weight: bold; }
+div#oplErrorFrame p span{ margin-right: 6px; }
+div#oplErrorFrame p.call{ border-top: 1px solid #e33a3a; margin: 5px; padding: 5px 0; }
+div#oplErrorFrame p.call span{ float: none; margin-right: 0; font-family: 'Courier New', Courier, monospaced;  font-size: 12px; }
+div#oplErrorFrame p.directive span{ font-weight: bold; }
+div#oplErrorFrame p.directive span.good{ color: #009900; }
+div#oplErrorFrame p.directive span.maybe{ color: #777700; }
+div#oplErrorFrame p.directive span.bad{ color: #770000; }
+div#oplErrorFrame p.important{ font-weight: bold; text-align: center; width:100%; }
+div#oplErrorFrame p.warning span{	float: left; margin-right: 12px; font-weight: bold; }
+div#oplErrorFrame a {font-weight: bold; color: #000000}
+div#oplErrorFrame a:hover {}
+div#oplErrorFrame ul {list-style: none; margin: 5px 15px; padding: 0}
+div#oplErrorFrame ul li {margin: 0; padding: 0}
+div#oplErrorFrame ul li p {padding:0;}
 
-li { margin-top: 2px; margin-bottom: 2px; padding: 0; }
-li.value { font-weight: bold; }
-li span{  margin-right: 6px; }
-li.value span.good{ color: #009900; }
-li.value span.maybe{ color: #777700; }
-li.value span.bad{ color: #770000; }
+div#oplErrorFrame li { margin-top: 2px; margin-bottom: 2px; padding: 0; }
+div#oplErrorFrame li.value { font-weight: bold; }
+div#oplErrorFrame li span{  margin-right: 6px; }
+div#oplErrorFrame li.value span.good{ color: #009900; }
+div#oplErrorFrame li.value span.maybe{ color: #777700; }
+div#oplErrorFrame li.value span.bad{ color: #770000; }
 
-code{ font-family: 'Courier New', Courier, monospaced; background: #ffdddd;  }
+div#oplErrorFrame code{ font-family: 'Courier New', Courier, monospaced; background: #ffdddd;  }
 /* ]]> */
 </style>  
 </head>
 <body>
 
-<div id="frame">
+<div id="oplErrorFrame">
 	<h1>{$this->_library} error</h1>
 	<div class="object"><div>
  
