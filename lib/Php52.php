@@ -1,27 +1,27 @@
 <?php
 /*
  *  OPEN POWER LIBS <http://www.invenzzia.org>
- *  ===========================================
+ *  ==========================================
  *
  * This file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE. It is also available through
  * WWW at this URL: <http://www.invenzzia.org/license/new-bsd>
  *
- * Copyright (c) 2008 Invenzzia Group <http://www.invenzzia.org>
+ * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
  * $Id$
  */
 
- /*
-  * This is a compatibility file that contains some implementations
-  * provided by PHP 5.3 and not available in the previous versions.
-  * 
-  * Currently, the file implements the basic functionality of the
-  * following classes:
-  *  - SplQueue
-  *  - SplStack
-  */
+/*
+ * This is a compatibility file that contains some implementations
+ * provided by PHP 5.3 and not available in the previous versions.
+ * 
+ * Currently, the file implements the basic functionality of the
+ * following classes:
+ *  - SplQueue
+ *  - SplStack
+ */
 
 	class SplDoublyLinkedList implements Countable, Iterator
 	{
