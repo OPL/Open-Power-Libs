@@ -155,4 +155,69 @@
 			$this->assertEquals(ob_get_clean(), "JOE/BAR.PHP\n");
 			return true;
 		} // end testAbsoluteMapping();
+
+		public function testMainFileLoading()
+		{
+			Opl_Loader::setDirectory('./autoload/');
+
+			ob_start();
+			Opl_Loader::load('Bar');
+
+			$this->assertEquals(ob_get_clean(), "BAR.PHP\n");
+			return true;
+		} // end testMainFileLoading();
+
+		public function testMainFileLoadingWithCustomPath1()
+		{
+			Opl_Loader::setDirectory('./autoload/');
+			Opl_Loader::addLibrary('Bar', array('directory' => './autoload/Bar/'));
+
+			ob_start();
+			Opl_Loader::load('Bar');
+
+			$this->assertEquals(ob_get_clean(), "BAR.PHP\n");
+			return true;
+		} // end testMainFileLoadingWithCustomPath1();
+
+		public function testMainFileLoadingWithCustomPath2()
+		{
+			Opl_Loader::setDirectory('./autoload/');
+			Opl_Loader::addLibrary('Bar', array('basePath' => './autoload/'));
+
+			ob_start();
+			Opl_Loader::load('Bar');
+
+			$this->assertEquals(ob_get_clean(), "BAR.PHP\n");
+			return true;
+		} // end testMainFileLoadingWithCustomPath2();
+
+		public function testUnknownLibraries1()
+		{
+			Opl_Loader::setDirectory('./autoload/');
+			Opl_Loader::setHandleUnknownLibraries(false);
+
+			ob_start();
+			$this->assertFalse(Opl_Loader::load('Foo_Bar'));
+		} // end testUnknownLibraries1();
+
+		public function testUnknownLibraries2()
+		{
+			Opl_Loader::setDirectory('./autoload/');
+			Opl_Loader::setHandleUnknownLibraries(false);
+			Opl_Loader::addLibrary('Foo', array('directory' => './autoload/Foo/'));
+
+			ob_start();
+			Opl_Loader::load('Foo_Bar');
+
+			$this->assertEquals(ob_get_clean(), "FOO/BAR.PHP\n");
+		} // end testUnknownLibraries2();
+
+		public function testUnknownLibraries3()
+		{
+			Opl_Loader::setDirectory('./autoload/');
+			Opl_Loader::setHandleUnknownLibraries(false);
+
+			ob_start();
+			$this->assertFalse(Opl_Loader::load('Joe'));
+		} // end testUnknownLibraries3();
 	} // end autoloadTest;

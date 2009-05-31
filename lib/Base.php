@@ -74,6 +74,12 @@
 		static private $_fileCheck = false;
 
 		/**
+		 * Checking if loader should handle not known libraries.
+		 * @var Boolean
+		 */
+		static private $_handleUnknownLibraries = true;
+
+		/**
 		 * Specifies a directory path to the OPL libraries.
 		 *
 		 * @param string $name The directory name where the OPL libraries are kept.
@@ -120,6 +126,16 @@
 		} // end setDefaultHandler();
 
 		/**
+		 * Sets state for handling unknown, not registered by addLibrary libraries.
+		 *
+		 * @param Boolean $state State for handling unknown libraries
+		 */
+		static public function setHandleUnknownLibraries($state)
+		{
+			self::$_handleUnknownLibraries = (boolean)$state;
+		} // end setHandleUnknownLibraries();
+
+		/**
 		 * Registers the autoloader.
 		 */
 		static public function register()
@@ -146,7 +162,7 @@
 		 */
 		static public function setCheckFileExists($status)
 		{
-			self::$_fileCheck = $status;
+			self::$_fileCheck = (bool)$status;
 		} // end setCheckFileExists();
 
 		/**
@@ -209,6 +225,16 @@
 					if($config['directory'][strlen($config['directory'])-1] != '/')
 					{
 						$config['directory'] .= '/';
+					}
+				}
+			}
+			if(isset($config['basePath']))
+			{
+				if($config['basePath'] != '')
+				{
+					if($config['basePath'][strlen($config['basePath'])-1] != '/')
+					{
+						$config['basePath'] .= '/';
 					}
 				}
 			}
@@ -302,11 +328,38 @@
 			}
 
 			$id = strpos($className, '_');
+			$wholeName = false;
+			// Handle the situation if there is no "_" in the class name
 			if($id === false)
 			{
-				return false;
+				$id = strlen($className);
+				$wholeName = true;
+			/*	if(in_array($className, array_keys(self::$_libraries)))
+				{
+					$file = self::getLibraryPath($className).'..'.DIRECTORY_SEPARATOR.$className.'.php';
+					if(self::$_fileCheck == true && !file_exists($file))
+					{
+						return false;
+					}
+
+					require($file);
+					return true;
+				}
+				else
+				{
+					return false;
+				}*/
 			}
 			$library = substr($className, 0, $id);
+
+			// Check if autoloader have to handle not registered libraries
+			if(!self::$_handleUnknownLibraries)
+			{
+				if(!in_array($library, array_keys(self::$_libraries)))
+				{
+					return false;
+				}
+			}
 
 			// If the handler is configured, allow the handler to do something.
 			$handler = self::_getLibraryHandler($library);
@@ -319,20 +372,22 @@
 			// Load the file.
 			if($ok)
 			{
-				$file = self::getLibraryPath($library).str_replace('_', DIRECTORY_SEPARATOR, substr($className, $id+1, strlen($className) - $id - 1)).'.php';
-				if(self::$_fileCheck == true)
+				if($wholeName)
 				{
-					if(file_exists($file))
-					{
-						require($file);
-						return true;
-					}
+					$path = '..'.DIRECTORY_SEPARATOR.$className;
 				}
 				else
 				{
-					require($file);
-					return true;
+					$path = str_replace('_', DIRECTORY_SEPARATOR, substr($className, $id+1, strlen($className) - $id - 1));
 				}
+				$file = self::getLibraryPath($library).$path.'.php';
+				if(self::$_fileCheck == true && !file_exists($file))
+				{
+						return true;
+				}
+
+				require($file);
+				return true;
 			}
 			return false;
 		} // end autoload();
@@ -426,6 +481,10 @@
 				if(isset(self::$_libraries[$library]['directory']))
 				{
 					return self::$_libraries[$library]['directory'];
+				}
+				if(isset(self::$_libraries[$library]['basePath']))
+				{
+					return self::$_libraries[$library]['basePath'].$library.'/';
 				}
 			}
 			return self::$_directory.$library.'/';

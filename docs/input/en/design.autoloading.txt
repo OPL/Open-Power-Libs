@@ -4,7 +4,13 @@ SeeAlso:
 
 ----
 
-The OPL core provides its own general-purpose autoloader designed to handle the libraries that use the `Foo_Bar_Joe` class naming format. The autoloader provides an abstraction layer for the automatic class loading using various rules. Thus, you do not have to remember, how a certain library is organized and where the required classes are really located.
+The OPL core provides its own general-purpose autoloader designed to handle the libraries that use the `Foo_Bar_Joe` class naming format. The autoloader provides an abstraction layer for the automatic class loading using various rules. Thus, you do not have to remember, how a certain library is organized and where the required classes are really located. The filesystem mapping rules are:
+
+~~~~
+Foo -> Foo.php
+Foo_Bar -> Foo/Bar.php
+Foo_Bar_Joe -> Foo/Bar/Joe.php
+~~~~
 
 The autoloading process
 =======================
@@ -62,12 +68,57 @@ Opl_Loader::setDefaultHandler(null);
 
 Opl_Loader::addLibrary('Opl', array('handler' => array('Opl_Loader', 'oplHandler')));
 Opl_Loader::addLibrary('Opt', array('handler' => array('Opl_Loader', 'oplHandler')));
-Opl_Loader::addLibrary('Doctrine', array('directory' => './libs/Doctrine/', 'handler' => 'doctrineModelLoader')));
+Opl_Loader::addLibrary('ExtraLibrary', array('handler' => 'someExtraHandler')));
 
 // Now we can load the classes
 ~~~~
 
-Both OPL and OPT use the OPL handler and we have configured it for them. Zend Framework may work with the default settings, so it does not appear on the list, and in case of Doctrine we must choose a subdirectory because of the organization of this project, and furthermore, add some function that will load the models for us.
+Both OPL and OPT use the OPL handler and we have configured it for them, but the extra library uses different special rules and must use different handler.
+
+Besides the handler, we may also define the library paths:
+
+~~~~
+[php]
+// The autoloader itself must be loaded manually
+require('./libs/Opl/Base.php');
+
+Opl_Loader::register();
+Opl_Loader::addLibrary('ExtraLib1', array('directory' => './vendor/ExtraLib1/'));
+Opl_Loader::addLibrary('ExtraLib2', array('basePath' => './vendor/'));
+~~~~
+
+The difference between `directory` and `basePath` is clear, if we take a look at the directory structure:
+
+~~~~
+/vendor
+/vendor/ExtraLib1
+/vendor/ExtraLib1/File.php
+/vendor/ExtraLib2
+/vendor/ExtraLib2/File.php
+/vendor/ExtraLib1.php
+/vendor/ExtraLib2.php
+~~~~
+
+Handling unregistered libraries
+===============================
+
+By default, OPL autoloader tries to handle every possible class, but sometimes this is not the correct behaviour. Let's take a look at the Doctrine ORM autoloader which also loads the model classes with the name `ModelName`, so we want OPL autoloader to skip them. The solution is provided below:
+
+~~~~
+[php]
+require('./libs/Opl/Base.php');
+
+Opl_Loader::register();
+Opl_Loader::setHandleUnknownLibraries(false);
+Opl_Loader::addLibrary('Opl', array('basePath' => './libs/'));
+Opl_Loader::addLibrary('Doctrine', array('basePath' => './libs/', 'handler' => null));
+
+spl_autoload_register(array('Doctrine', 'autoload'));
+
+$myModel = new MyModel;
+~~~~
+
+When handling unknown libraries is disabled, the autoloader skips all the classes that do not belong to the libraries registered with `addLibrary()`. In the example above, we have registered `Opl` and `Doctrine` only. All the classes whose names do not begin with those two identifiers are skipped and left for the next autoloader in the queue.
 
 PHAR-s
 ======
