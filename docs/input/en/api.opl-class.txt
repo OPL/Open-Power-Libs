@@ -1,7 +1,6 @@
 Title: Opl_Class class
 ShortTitle: Opl_Class
 Status: abstract
-File: base.php
 EExtendedBy:
  - Opf_Class
  - Opt_Class

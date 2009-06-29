@@ -1,6 +1,5 @@
 Title: Opl_Registry class
 ShortTitle: Opl_Registry
-File: base.php
 
 ----
 

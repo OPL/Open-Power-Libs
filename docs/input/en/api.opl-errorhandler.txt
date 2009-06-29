@@ -1,7 +1,6 @@
 Title: Opl_ErrorHandler class
 ShortTitle: Opl_ErrorHandler
 Status: public
-File: errorhandler.php
 EExtendedBy:
  - Opt_ErrorHandler
 

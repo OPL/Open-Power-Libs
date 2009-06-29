@@ -1,6 +1,5 @@
 Title: Opl_Loader class
 ShortTitle: Opl_Loader
-File: base.php
 
 ----
 
