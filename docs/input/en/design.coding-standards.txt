@@ -96,7 +96,6 @@ All the classes, functions and interfaces **may** be one tab away from the left 
 
 ~~~~
 [php]
-
 // Good
 class Opx_Foo
 {
@@ -116,7 +115,6 @@ Opening curly brackets **must** be in a separate line:
 
 ~~~~
 [php]
-<?php
 // Good
 class Opx_Foo
 {
@@ -133,7 +131,6 @@ Class and interface closing curly brackets **must** be accompanied with the clas
 
 ~~~~
 [php]
-<?php
 class Opx_Foo
 {
 
@@ -144,7 +141,6 @@ The methods must follow it as well, but here we add also the round brackets to i
 
 ~~~~
 [php]
-<?php
 class Opx_Foo
 {
     public function foo()
@@ -380,7 +376,6 @@ The code **must** be commented. For short notes, we use single-line comments:
 
 ~~~~
 [php]
-
 // Now we must do foo.
 ~~~~
 
@@ -411,13 +406,12 @@ The methods and the most important class fields **should** be equipped with phpd
 
 ~~~~
 [php]
-
 /**
  * This method does something.
  * 
- * @param String $foo The required argument
- * @param Int $bar=5 optional The optional argument
- * @return Int
+ * @param string $foo The required argument
+ * @param int $bar=5 optional The optional argument
+ * @return int
  */
 public function something($foo, $bar = 5)
 {

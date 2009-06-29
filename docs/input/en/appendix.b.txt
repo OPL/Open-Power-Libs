@@ -3,7 +3,7 @@ Appendix: Yes
 
 ----
 
-Open Power Libs &copy; [Invenzzia group](http://www.invenzzia.org/) 2008. The code was written by:
+Open Power Libs &copy; [Invenzzia group](http://www.invenzzia.org/) 2008-2009. The code was written by:
 
 + Tomasz "Zyx" Jędrzejewski
 + Jacek "eXtreme" Jędrzejewski

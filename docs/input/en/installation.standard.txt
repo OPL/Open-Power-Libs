@@ -8,8 +8,6 @@ In order to use OPL libraries in your project, you need to load the core file an
 
 ~~~~
 [php]
-<?php
-
 require('../../lib/Opl/Base.php');
 Opl_Loader::setDirectory('../../lib/');
 Opl_Loader::register();

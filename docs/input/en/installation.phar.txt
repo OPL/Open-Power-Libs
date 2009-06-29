@@ -6,8 +6,6 @@ PHAR archives solve some problems with the directory structure and the initializ
 
 ~~~~
 [php]
-<?php
-
 require('./opl.phar');
 require('./opt.phar');
 require('./opf.phar');
@@ -24,7 +22,6 @@ The ordinary directory structure is necessary, if you are going to use third par
 
 ~~~~
 [php]
-<?php
 require('./opl.phar');
 require('./opt.phar');
 require('./opf.phar');

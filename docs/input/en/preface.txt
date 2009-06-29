@@ -9,7 +9,7 @@ Package contents
 
 Currently, the package contains four tools:
 
-1. Open Power Libs core (OPL)- provides base classes and interfaces.
+1. Open Power Libs core (OPL) - provides base classes and interfaces.
 2. Open Power Template (OPT) - a template engine.
 3. Open Power Forms (OPF) - form processing/data validation tool.
 4. Open Power Classes (OPC) - a group of smaller supporting classes.
