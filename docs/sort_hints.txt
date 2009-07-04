@@ -5,3 +5,6 @@ installation.phar
 design
 api
 appendix
+appendix.support
+appendix.bugs
+appendix.license
