@@ -7,14 +7,12 @@ Open Power Libs is a project that aims to create a set of advanced and well-desi
 Package contents
 ================
 
-Currently, the package contains four tools:
+The status of the package contents:
 
-1. Open Power Libs core (OPL) - provides base classes and interfaces.
-2. Open Power Template (OPT) - a template engine.
-3. Open Power Forms (OPF) - form processing/data validation tool.
-4. Open Power Classes (OPC) - a group of smaller supporting classes.
-
-The next ones are on the way.
+1. Open Power Libs core (OPL)- provides base classes and interfaces. Stable.
+2. Open Power Template (OPT) - a template engine. Stable.
+3. Open Power Classes (OPC) - a group of smaller supporting classes. Under development.
+4. Open Power Forms (OPF) - form processing. Planning.
 
 Of course, the libraries do not work alone. OPF cannot work without OPT, because all the forms and controls are drawn using the template engine features. On the other hand, most of OPC classes are standalone projects, but as they provide implementations for various OPT and OPF interfaces, they can also cooperate.
 
