@@ -5,7 +5,7 @@ Status: static public
 
 ----
 
-Creates a new table in the debug console entitiled `$title`. The `$id` should be an unique key that allows to refer to this table later. `$columns` must contain a list of table column titles. You may prepend them with the width, for example `50%:Column name`. An example:
+Creates a new table in the debug console entitled `$title`. The `$id` should be an unique key that allows to refer to this table later. `$columns` must contain a list of table column titles. You may prepend them with the width, for example `50%:Column name`. An example:
 
 ~~~~
 [php]

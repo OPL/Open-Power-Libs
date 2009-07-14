@@ -6,40 +6,40 @@ Status: protected
 
 ----
 
-Displays the informators associated with the specified exception `$exception`.
+Displays the informers associated with the specified exception `$exception`.
 
 > [information]
-> **Informator** is a special method in the error handler that is able to display some extra information about the exception, for example the library configuration or the backtrace.
+> **Informer** is a special method in the error handler that is able to display some extra information about the exception, for example the library configuration or the backtrace.
 
-The list of informators is stored in the protected field `$_context`. The method may be used in `display()` to display the context information in the specified place.
+The list of informers is stored in the protected field `$_context`. The method may be used in `display()` to display the context information in the specified place.
 
 Context help
 ============
 
-A sample list of informators may look like this:
+A sample list of informers may look like this:
 
 ~~~~
 [php]
 protected $_context = array(
 	'Exception_Name_1' => array(
-		'Informator1' => array('Informator arguments'),
-		'Informator2' => array('Informator arguments'),	
+		'Informer1' => array('Informer arguments'),
+		'Informer2' => array('Informer arguments'),	
 	),
 	'Exception_Name_2' => array(
-		'Informator1' => array('Informator arguments'),
-		'Informator2' => array('Informator arguments'),	
+		'Informer1' => array('Informer arguments'),
+		'Informer2' => array('Informer arguments'),	
 	),
 	// For other exceptions
 	'__UNKNOWN__' => array(
-		'Informator1' => array('Informator arguments'),
-		'Informator2' => array('Informator arguments'),	
+		'Informer1' => array('Informer arguments'),
+		'Informer2' => array('Informer arguments'),	
 	),
 );
 ~~~~
 
-The informators are simple methods that take the exception object as the first argument, but optionally, they can take much more. The method name must begin with `_print`, so that `Informator1` points to `_printInformator1` method. The HTML code must be displayed with `echo`.
+The informers are simple methods that take the exception object as the first argument, but optionally, they can take much more. The method name must begin with `_print`, so that `Informer1` points to `_printInformer1` method. The HTML code must be displayed with `echo`.
 
-Available informators
+Available informers
 =====================
 
 OPL provides the following filters:
@@ -49,4 +49,4 @@ OPL provides the following filters:
 3. `BasicConfiguration` - used to print the basic library configuration. This method must be extended in the particular library error handlers in order to work.
 4. `Backtrace` - prints the backtrace.
 
-The libraries may also provide their own informators.
+The libraries may also provide their own informers.

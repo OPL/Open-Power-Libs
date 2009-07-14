@@ -102,7 +102,7 @@ The difference between `directory` and `basePath` is clear, if we take a look at
 Handling unregistered libraries
 ===============================
 
-By default, OPL autoloader tries to handle every possible class, but sometimes this is not the correct behaviour. Let's take a look at the Doctrine ORM autoloader which also loads the model classes with the name `ModelName`, so we want OPL autoloader to skip them. The solution is provided below:
+By default, OPL autoloader tries to handle every possible class, but sometimes this is not the correct behavior. Let's take a look at the Doctrine ORM autoloader which also loads the model classes with the name `ModelName`, so we want OPL autoloader to skip them. The solution is provided below:
 
 ~~~~
 [php]

@@ -5,4 +5,4 @@ Status: static public
 
 ----
 
-Adds the "key => value" pairs from the assotiative array `$options` to the list `$id`.
+Adds the "key => value" pairs from the associative array `$options` to the list `$id`.

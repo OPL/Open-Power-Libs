@@ -2,4 +2,4 @@ Title: Opl_Debug
 
 ----
 
-The class provides some debugging utilites helpful during the development process. Note that the final code **should not** contain any references to this class.
+The class provides some debugging utilities helpful during the development process. Note that the final code **should not** contain any references to this class.

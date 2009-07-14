@@ -269,7 +269,7 @@ for($i = 0; $i < $cnt; $i++)
 }
 ~~~~
 
-To iterate through assotiative arrays, we use **foreach**.
+To iterate through associative arrays, we use **foreach**.
 
 In **switch**, we are allowed to create constructs with advanced flow control (i.e. conditional breaks), if it makes the code shorter and simpler to understand.
 
@@ -305,7 +305,7 @@ For strings, single quotes **must** be used unless we have newline/carriage retu
 "Double quoted text, because it uses \r\n";
 ~~~~
 
-The object access operators are writted without surrounding spaces:
+The object access operators are written without surrounding spaces:
 
 ~~~~
 [php]
@@ -382,7 +382,7 @@ The code **must** be commented. For short notes, we use single-line comments:
 > [error]
 > We do not comment obvious things and issues.
 
-For longer explainations, we use multiline comments:
+For longer explanations, we use multiline comments:
 
 ~~~~
 [php]
