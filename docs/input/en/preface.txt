@@ -9,7 +9,7 @@ Package contents
 
 The status of the package contents:
 
-1. Open Power Libs core (OPL)- provides base classes and interfaces. Stable.
+1. Open Power Libs core (OPL) - provides base classes and interfaces. Stable.
 2. Open Power Template (OPT) - a template engine. Stable.
 3. Open Power Classes (OPC) - a group of smaller supporting classes. Under development.
 4. Open Power Forms (OPF) - form processing. Planning.
