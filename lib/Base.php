@@ -150,7 +150,7 @@
 		 */
 		static public function getDirectory()
 		{
-			return self::_directory;
+			return self::$_directory;
 		} // end getDirectory();
 
 		/**

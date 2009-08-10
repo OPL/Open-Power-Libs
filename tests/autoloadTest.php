@@ -23,6 +23,12 @@
 			return true;
 		} // end testLoadCompatibilityLayer();
 
+		public function testGettingDirectory()
+		{
+			Opl_Loader::setDirectory('./autoload/');
+			$this->assertEquals('./autoload/', Opl_Loader::getDirectory());
+		} // end testGettingDirectory();
+
 		public function testSimpleClassLoading()
 		{
 			Opl_Loader::setDirectory('./autoload/');
