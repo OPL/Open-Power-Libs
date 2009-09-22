@@ -1,7 +1,6 @@
 <?php
 /*
  *  OPEN POWER LIBS <http://www.invenzzia.org>
- *  ==========================================
  *
  * This file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE. It is also available through
@@ -798,7 +797,7 @@
 		 * @internal
 		 * @param String &$path The path to secure.
 		 */
-		protected function _securePath(&$path)
+		public function _securePath(&$path)
 		{
 			if($path[strlen($path)-1] != '/')
 			{
