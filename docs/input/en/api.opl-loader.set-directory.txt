@@ -1,8 +1,11 @@
 Title: setDirectory()
 ShortTitle: Opl_Loader::setDirectory()
+Construct: static method
 Reference: void Opl_Loader::setDirectory( string $directory )
+Visibility: public
+Arguments:
+ - Name: $directory | EType: string | Desc: The new directory with the libraries.
 VersionSince: 2.0.0-dev7
-Status: static public
 SeeAlso:
  - api.opl-loader.map-library
 

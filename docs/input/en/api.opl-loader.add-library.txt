@@ -1,7 +1,11 @@
 Title: addLibrary()
 ShortTitle: Opl_Loader::addLibrary()
+Construct: static method
 Reference: void addLibrary(string $library, array $config);
-Status: static public
+Visibility: public
+Arguments:
+ - Name: $library | EType: string | Desc: The library name and prefix of its classes.
+ - Name: $config | EType: array | Desc: The library configuration.
 VersionSince: 2.0-RC1
 SeeAlso:
  - api.opl-loader.remove-library

@@ -102,7 +102,7 @@ class Opx_Foo
 
 }
 
-	// Good
+	// Also good
 	class Opx_Foo
 	{
 
@@ -342,11 +342,11 @@ if(!isset($foo[$resource]))
 return $foo[$resource];
 ~~~~
 
-To check, whether the `NULL` value has been returned, we use `is_null()` function:
+To check, whether the `NULL` value has been returned, we the `=== null` expression:
 
 ~~~~
 [php]
-if(is_null($foo))
+if($foo === null)
 {
 	someContent();
 }

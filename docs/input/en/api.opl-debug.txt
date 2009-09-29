@@ -1,4 +1,5 @@
 Title: Opl_Debug
+Construct: class
 
 ----
 

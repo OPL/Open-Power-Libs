@@ -1,8 +1,12 @@
 Title: _pluginLoader()
 ShortTitle: Opl_Class::_pluginLoader()
+Construct: method
 Reference: void Opl_Class::_pluginLoader( string $directory, string $file )
+Visibility: protected
+Arguments:
+ - Name: $directory | EType: string | Desc: The directory, where the plugin is stored.
+ - Name: $file | EType: string | Desc: The file, where the plugin is stored.
 VersionSince: 2.0.0-dev7
-Status: protected
 SeeAlso:
  - api.opl-class.load-plugins
 

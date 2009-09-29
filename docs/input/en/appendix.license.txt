@@ -7,6 +7,7 @@ Open Power Libraries 2 was designed and created by the **Invenzzia programming g
 
 + Tomasz "Zyx" Jędrzejewski - the idea, project, programming, documentation, tests.
 + Jacek "eXtreme" Jędrzejewski - tests, support, ideas, documentation.
++ Amadeusz "megaweb" Starzykiewicz - autoloader improvements.
 
 Copyright &copy; Invenzzia Group 2008-2009 - [www.invenzzia.org](http://www.invenzzia.org/)
 

@@ -1,8 +1,12 @@
 Title: autoload()
 ShortTitle: Opl_Loader::autoload()
-Reference: bool Opl_Loader::autoload( $className )
+Construct: static method
+Reference: bool Opl_Loader::autoload( string $className )
+Visibility: public
+Arguments:
+ - Name: $className | EType: string | Desc: The class to load.
+Returns: False, if the class cannot be found with this autoloader.
 VersionSince: 2.0.0-dev7
-Status: static public
 SeeAlso:
  - api.opl-loader.load
 

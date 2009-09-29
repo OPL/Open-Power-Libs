@@ -333,21 +333,6 @@
 			{
 				$id = strlen($className);
 				$wholeName = true;
-			/*	if(in_array($className, array_keys(self::$_libraries)))
-				{
-					$file = self::getLibraryPath($className).'..'.DIRECTORY_SEPARATOR.$className.'.php';
-					if(self::$_fileCheck == true && !file_exists($file))
-					{
-						return false;
-					}
-
-					require($file);
-					return true;
-				}
-				else
-				{
-					return false;
-				}*/
 			}
 			$library = substr($className, 0, $id);
 
@@ -549,7 +534,7 @@
 		 */
 		static public function exists($name)
 		{
-			return isset(self::$_objects[$name]);
+			return !empty(self::$_objects[$name]);
 		} // end exists();
 
 		/**

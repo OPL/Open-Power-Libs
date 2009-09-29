@@ -1,6 +1,6 @@
 Title: Opl_ErrorHandler class
 ShortTitle: Opl_ErrorHandler
-Status: public
+Construct: class
 EExtendedBy:
  - Opt_ErrorHandler
 

@@ -1,4 +1,5 @@
 Title: Opl_Translation_Interface
+Construct: interface
 
 ----
 

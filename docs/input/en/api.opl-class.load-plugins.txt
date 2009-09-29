@@ -1,8 +1,13 @@
 Title: loadPlugins()
 ShortTitle: Opl_Class::loadPlugins()
+Construct: method
 Reference: void Opl_Class::loadPlugins()
+Visibility: public
+EThrows:
+ - Opl_NotWriteable_Exception
+ - Opl_FileNotExists_Exception
+ - Opl_InvalidType_Exception
 VersionSince: 2.0.0-dev7
-Status: public
 SeeAlso:
  - api.opl-class._plugin-loader
 

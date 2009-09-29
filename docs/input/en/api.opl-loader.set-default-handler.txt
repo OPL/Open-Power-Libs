@@ -1,7 +1,10 @@
 Title: setDefaultHandler()
 ShortTitle: Opl_Loader::setDefaultHandler()
+Construct: static method
 Reference: void setDefaultHandler(callback $handler);
-Status: static public
+Visibility: public
+Arguments:
+ - Name: $handler | EType: callback | Desc: The callback to the new default library handler.
 VersionSince: 2.0-RC1
 SeeAlso:
  - api.opl-loader.add-library

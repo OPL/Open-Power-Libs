@@ -1,8 +1,11 @@
 Title: setCheckFileExists()
 ShortTitle: Opl_Loader::setCheckFileExists()
+Construct: static method
 Reference: void Opl_Loader::setCheckFileExists( boolean $status )
+Visibility: public
+Arguments:
+ - Name: $status | EType: boolean | The new status.
 VersionSince: 2.0-RC1
-Status: static public
 
 ----
 

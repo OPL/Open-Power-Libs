@@ -1,11 +1,11 @@
 Title: setHandleUnknownLibraries()
 ShortTitle: Opl_Loader::setHandleUnknownLibraries()
-
 Construct: static method
 Visibility: public
 Reference: void Opl_Loader::setHandleUnknownLibraries( boolean $status )
+Arguments:
+ - Name: $status | EType: boolean | Desc: The new status.
 VersionSince: 2.0-RC1
-
 
 ----
 

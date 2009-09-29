@@ -1,8 +1,12 @@
 Title: map()
 ShortTitle: Opl_Loader::map()
+Construct: static method
 Reference: void Opl_Loader::map( string $className, string $file )
+Visibility: public
+Arguments:
+ - Name: $className | EType: string | Desc: The class name to map.
+ - Name: $file | EType: string | Desc: The file with the class.
 VersionSince: 2.0.0-dev7
-Status: static public
 SeeAlso:
  - api.opl-loader.map-absolute
 

@@ -1,7 +1,8 @@
 Title: Opl_Class class
 ShortTitle: Opl_Class
-Status: abstract
+Construct: abstract class
 EExtendedBy:
+ - Opc_Class
  - Opf_Class
  - Opt_Class
 

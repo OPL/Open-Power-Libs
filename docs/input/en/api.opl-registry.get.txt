@@ -1,8 +1,14 @@
 Title: get()
 ShortTitle: Opl_Registry::get()
+Construct: static method
 Reference: object Opl_Registry::get( string $name )
+Visibility: public
+Arguments:
+ - Name: $name | EType: string | Desc: The object name.
+Returns: The registered object.
+EThrows:
+ - Opl_Debug_ItemNotExists_Exception
 VersionSince: 2.0.0-dev7
-Status: static public
 SeeAlso:
  - api.opl-registry.register
 
