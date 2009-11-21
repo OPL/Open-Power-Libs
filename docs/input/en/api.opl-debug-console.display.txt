@@ -5,4 +5,4 @@ Status: static public
 
 ----
 
-Displays the debug console in the output.
+If the global configuration option `opl_custom_console` is not set, displays the debug console in the output. 
