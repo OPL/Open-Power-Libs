@@ -63,7 +63,7 @@
 	 * Filesystem exceptions
 	 */
 	
-	class Opl_Filesystem_Exception extends Exception{}
+	class Opl_Filesystem_Exception extends Opl_Exception{}
 	
 	class Opl_NotReadable_Exception extends Opl_Filesystem_Exception
 	{
