@@ -70,7 +70,7 @@
 			ob_start();
 			Opl_Loader::load('Joe_Foo_Exception');
 
-			$this->assertEquals(ob_get_clean(), "JOE/EXCEPTION.PHP\n");
+			$this->assertEquals(ob_get_clean(), "JOE/CLASS.PHP\nJOE/EXCEPTION.PHP\n");
 			return true;
 		} // end testExceptionLoading();
 
@@ -103,7 +103,7 @@
 			ob_start();
 			Opl_Loader::load('NewLib_Foo');
 
-			$this->assertEquals(ob_get_clean(), "JOE/FOO.PHP\n");
+			$this->assertEquals(ob_get_clean(), "JOE/CLASS.PHP\nJOE/FOO.PHP\n");
 			return true;
 		} // end testAlternativePath();
 
@@ -114,7 +114,7 @@
 			ob_start();
 			Opl_Loader::load('NewLib_Foo');
 
-			$this->assertEquals(ob_get_clean(), "JOE/FOO.PHP\n");
+			$this->assertEquals(ob_get_clean(), "JOE/CLASS.PHP\nJOE/FOO.PHP\n");
 			return true;
 		} // end testAlternativePathWithoutSlash();
 
@@ -169,7 +169,7 @@
 			ob_start();
 			Opl_Loader::load('Bar');
 
-			$this->assertEquals(ob_get_clean(), "BAR.PHP\n");
+			$this->assertEquals(ob_get_clean(), "BAR/CLASS.PHP\nBAR.PHP\n");
 			return true;
 		} // end testMainFileLoading();
 
@@ -181,7 +181,7 @@
 			ob_start();
 			Opl_Loader::load('Bar');
 
-			$this->assertEquals(ob_get_clean(), "BAR.PHP\n");
+			$this->assertEquals(ob_get_clean(), "BAR/CLASS.PHP\nBAR.PHP\n");
 			return true;
 		} // end testMainFileLoadingWithCustomPath1();
 
@@ -193,7 +193,7 @@
 			ob_start();
 			Opl_Loader::load('Bar');
 
-			$this->assertEquals(ob_get_clean(), "BAR.PHP\n");
+			$this->assertEquals(ob_get_clean(), "BAR/CLASS.PHP\nBAR.PHP\n");
 			return true;
 		} // end testMainFileLoadingWithCustomPath2();
 
@@ -215,7 +215,7 @@
 			ob_start();
 			Opl_Loader::load('Foo_Bar');
 
-			$this->assertEquals(ob_get_clean(), "FOO/BAR.PHP\n");
+			$this->assertEquals(ob_get_clean(), "FOO/CLASS.PHP\nFOO/BAR.PHP\n");
 		} // end testUnknownLibraries2();
 
 		public function testUnknownLibraries3()
@@ -226,4 +226,14 @@
 			ob_start();
 			$this->assertFalse(Opl_Loader::load('Joe'));
 		} // end testUnknownLibraries3();
+
+		public function testGettingLibraryPath()
+		{
+			Opl_Loader::setDirectory('./autoload/');
+			Opl_Loader::addLibrary('NewLib', array('directory' => './autoload/Joe'));
+			ob_start();
+
+			$this->assertEquals(Opl_Loader::getLibraryPath('NewLib'), './autoload/Joe'.DIRECTORY_SEPARATOR);
+			return true;
+		} // end testAlternativePath();
 	} // end autoloadTest;

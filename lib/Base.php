@@ -87,9 +87,9 @@
 		{
 			if($name != '')
 			{
-				if($name[strlen($name)-1] != '/')
+				if($name[strlen($name)-1] != DIRECTORY_SEPARATOR)
 				{
-					$name .= '/';
+					$name .= DIRECTORY_SEPARATOR;
 				}
 			}
 			// Prevention against current directory changes in Apache
@@ -98,7 +98,7 @@
 			
 			if(isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false)
 			{
-				$name = realpath($name).'/';
+				$name = realpath($name).DIRECTORY_SEPARATOR;
 			}
 			self::$_directory = $name;
 		} // end setDirectory();
@@ -221,9 +221,9 @@
 			{
 				if($config['directory'] != '')
 				{
-					if($config['directory'][strlen($config['directory'])-1] != '/')
+					if($config['directory'][strlen($config['directory'])-1] != DIRECTORY_SEPARATOR)
 					{
-						$config['directory'] .= '/';
+						$config['directory'] .= DIRECTORY_SEPARATOR;
 					}
 				}
 			}
@@ -231,9 +231,9 @@
 			{
 				if($config['basePath'] != '')
 				{
-					if($config['basePath'][strlen($config['basePath'])-1] != '/')
+					if($config['basePath'][strlen($config['basePath'])-1] != DIRECTORY_SEPARATOR)
 					{
-						$config['basePath'] .= '/';
+						$config['basePath'] .= DIRECTORY_SEPARATOR;
 					}
 				}
 			}
@@ -468,10 +468,10 @@
 				}
 				if(isset(self::$_libraries[$library]['basePath']))
 				{
-					return self::$_libraries[$library]['basePath'].$library.'/';
+					return self::$_libraries[$library]['basePath'].$library.DIRECTORY_SEPARATOR;
 				}
 			}
-			return self::$_directory.$library.'/';
+			return self::$_directory.$library.DIRECTORY_SEPARATOR;
 		} // end getLibraryPath();
 
 		/**
