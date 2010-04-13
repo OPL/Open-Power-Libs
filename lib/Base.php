@@ -166,7 +166,7 @@ class Opl_Loader
 		{
 			if(!file_exists($config))
 			{
-				throw new Opl_FileNotExists_Exception('file', $config);
+				throw new Opl_Filesystem_Exception('The file '.$config.' does not exist.');
 			}
 			$config = parse_ini_file($config, true);
 		}
@@ -179,22 +179,14 @@ class Opl_Loader
 		{
 			foreach($config['libraries'] as $lib => $path)
 			{
-				self::mapLibrary($lib, $path);
+				self::addLibrary($lib, array('directory' => $path));
 			}
 		}
 		if(isset($config['classes']) && is_array($config['classes']))
 		{
 			foreach($config['classes'] as $class => $path)
 			{
-				if(strpos($path, ':') !== false)
-				{
-					$data = explode(':', $path);
-					self::map($class, $data[1], $data[0]);
-				}
-				else
-				{
-					self::map($class, $path);
-				}
+				self::map($class, $path);
 			}
 		}
 	} // end loadPaths();
@@ -279,11 +271,14 @@ class Opl_Loader
 		// Handle the situation if there is no "_" in the class name
 		if($id === false)
 		{
-			$id = strlen($className);
+			$id = strlen($replacement);
 			$wholeName = true;
+			$library = $className;
 		}
-		$library = substr($className, 0, $id);
-
+		else
+		{
+			$library = substr($className, 0, $id);
+		}
 		// Check if autoloader have to handle not registered libraries
 		if(!isset(self::$_libraries[$library]))
 		{
@@ -301,8 +296,8 @@ class Opl_Loader
 		// Now load the file, depending on the path type set for the library.
 		if(isset($data['basePath']))
 		{
-			$file = $data['basePath'].$replacement.'.php';
-			if(self::$_fileCheck == true && !file_exists($file))
+			$path = $data['basePath'].$replacement.'.php';
+			if(self::$_fileCheck == true && !file_exists($path))
 			{
 				return true;
 			}
