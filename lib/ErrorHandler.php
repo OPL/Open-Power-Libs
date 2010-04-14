@@ -12,38 +12,169 @@
  * $Id$
  */
 
-	class Opl_ErrorHandler
-	{
-		protected $_library = 'Open Power Libs';
-		protected $_context = array(
-			'Opl_Debug_Exception' => array(
-				'BasicConfiguration' => array(),
-				'Backtrace' => array()
-			),
-			'__UNKNOWN__' => array(
-				'BasicConfiguration' => array()
-			),
-		);
+/**
+ * The generic error handler for OPL libraries and other exceptions.
+ * It generates a convenient error screen and displays it in the
+ * browser.
+ *
+ * @author Jacek Jędrzejewski
+ * @author Tomasz Jędrzejewski
+ * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
+ * @license http://www.invenzzia.org/license/new-bsd New BSD License
+ */
+class Opl_ErrorHandler
+{
+	/**
+	 * The port list.
+	 * @var array
+	 */
+	private $_ports = array();
 
-		/**
-		 * Displays an exception information using the default OPL graphics
-		 * style.
-		 *
-		 * @param Opl_Exception $exception The exception to be displayed.
-		 */	
-		public function display(Opl_Exception $exception)
+	/**
+	 * The informer list.
+	 * @var array
+	 */
+	private $_informers = array();
+
+	/**
+	 * Creates an instance of the error handler.
+	 */
+	public function __construct()
+	{
+		$this->addInformer('backtrace', 'Opl_ErrorHandler_Informer_Backtrace');
+		$this->addInformer('stack', 'Opl_ErrorHandler_Informer_Stack');
+		$this->addInformer('information', 'Opl_ErrorHandler_Informer_ErrorInformation');
+	} // end __construct();
+
+	/**
+	 * Registers a new port for exception handling.
+	 * 
+	 * @param Opl_ErrorHandler_Port_Interface $port The registered port.
+	 */
+	public function addPort(Opl_ErrorHandler_Port_Interface $port)
+	{
+		$this->_ports[] = $port;
+	} // end addPort();
+
+	/**
+	 * Returns true, if the specified port has been registered in the
+	 * error handler.
+	 *
+	 * @return boolean
+	 */
+	public function hasPort(Opl_ErrorHandler_Port_Interface $port)
+	{
+		foreach($this->_ports as $matchedPort)
 		{
-			if(ob_get_level() > 0)
+			if($matchedPort === $port)
 			{
-				ob_end_clean();
+				return true;
 			}
+		}
+		return false;
+	} // end hasPort();
+
+	/**
+	 * Registers a new informer under the specified string identifier. If the
+	 * identifier is not free, the method returns false. The informer may be
+	 * either an object of Opl_ErrorHandler_Informer_Interface or the class
+	 * name that implements this interface.
+	 *
+	 * @throws InvalidArgumentException
+	 * @param string $name The informer identifier
+	 * @param Opl_ErrorHandler_Informer_Interface|string $informer The informer interface
+	 * @return boolean True on success.
+	 */
+	public function addInformer($name, $informer)
+	{
+		if(!is_string($informer) && !$informer instanceof Opl_ErrorHandler_Informer_Interface)
+		{
+			throw new InvalidArgumentException('The second argument is neither a class name string nor an object implementing Opl_ErrorHandler_Informer_Interface.');
+		}
+
+		if(isset($this->_informers[(string)$name]))
+		{
+			return false;
+		}
+		$this->_informers[(string)$name] = $informer;
+		return true;
+	} // end addInformer();
+
+	/**
+	 * Returns the informer object under the specified identifier. If the
+	 * informer does not exist or does not implement Opl_ErrorHandler_Informer_Interface,
+	 * it returns NULL.
+	 * 
+	 * @param string $name The informer identifier
+	 * @return Opl_ErrorHandler_Informer_Interface|NULL
+	 */
+	public function getInformer($name)
+	{
+		if(!isset($this->_informers[(string)$name]))
+		{
+			return NULL;
+		}
+
+		// Lazy-load the informer in the string representation.
+		if(is_string($this->_informers[(string)$name]))
+		{
+			$name = $this->_informers[(string)$name];
+			$object = new $name();
+			if(!$object instanceof Opl_ErrorHandler_Informer_Interface)
+			{
+				// Invalid value, skip it!
+				unset($this->_informers[(string)$name]);
+				return NULL;
+			}
+			$this->_informers[(string)$name] = $object;
+		}
+		return $this->_informers[(string)$name];
+	} // end getInformer();
+
+	/**
+	 * Displays an exception error message. The returned value reports
+	 * if the error handler managed to handle the exception.
+	 *
+	 * @param Exception $exception The exception to be displayed.
+	 * @return boolean
+	 */
+	public function display(Exception $exception)
+	{
+		$debug = false;
+		if(Opl_Registry::getValue('opl_extended_errors'))
+		{
+			$debug = true;
+		}
+
+		// Match the port to the exception.
+		foreach($this->_ports as $port)
+		{
+			if($port->match($exception))
+			{
+				$libraryName = $port->getName();
+				if($debug === true)
+				{
+					$context = $port->getContext($exception);
+				}
+				break;
+			}
+		}
+		if(!isset($libraryName))
+		{
+			return false;
+		}
+		// Display the error.
+		if(ob_get_level() > 0)
+		{
+			ob_end_clean();
+		}
 echo <<<EOF
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>{$this->_library} error</title>
+<title>{$libraryName} error</title>
 <style type="text/css">
 /* <![CDATA[ */
 html, body{  margin: 0; padding: 0; font-size: 10pt; background: #ffffff;  }
@@ -83,113 +214,44 @@ div#oplErrorFrame code{ font-family: 'Courier New', Courier, monospaced; backgro
 <body>
 
 <div id="oplErrorFrame">
-	<h1>{$this->_library} error</h1>
-	<div class="object"><div>
- 
+<h1>{$libraryName} error</h1>
+<div class="object"><div>
+
 EOF;
-	echo '  			<p class="message">'.htmlspecialchars($exception->getMessage())."</p>\r\n";
-	echo '  			<p class="code">'.get_class($exception)."</p>\r\n";
-	if(Opl_Registry::getState('opl_extended_errors'))
+echo '  			<p class="message">'.htmlspecialchars($exception->getMessage())."</p>\r\n";
+echo '  			<p class="code">'.get_class($exception)."</p>\r\n";
+if($debug)
+{
+	echo '  			<p class="call"><span>'.$exception->getFile().'</span> [<span>'.$exception->getLine()."</span>]</p>\r\n";
+}
+else
+{
+	echo "  			<p class=\"call\">Debug mode is disabled. No additional information provided.</p>\r\n";
+}
+echo "  		</div></div>\r\n";
+
+if($debug)
+{
+	echo "			<div class=\"object\"><div>\r\n";
+	foreach($context as $name => $params)
 	{
-		
-		echo '  			<p class="call"><span>'.$exception->getFile().'</span> [<span>'.$exception->getLine()."</span>]</p>\r\n";
-	}
-	else
-	{
-		echo "  			<p class=\"call\">Debug mode is disabled. No additional information provided.</p>\r\n";
+		$informer = $this->getInformer($name);
+		if($informer !== null)
+		{
+			$informer->display($exception, $params);
+		}
+		else
+		{
+			echo "		<p class=\"directive\"><strong>Unknown informer:</strong> ".$name."</p>\r\n";
+		}
 	}
 	echo "  		</div></div>\r\n";
-
-	if(Opl_Registry::getState('opl_extended_errors'))
-	{
-		echo "			<div class=\"object\"><div>\r\n";
-		$this->_resolveContextInfo($exception);
-		echo "  		</div></div>\r\n";
-	}
-	echo <<<EOF
+}
+echo <<<EOF
 </div>
 </body>
 </html>
 EOF;
-		} // end display();
-	
-		protected function _resolveContextInfo($exception)
-		{
-			$use = get_class($exception);
-			if(!isset($this->_context[$use]))
-			{
-				$use = '__UNKNOWN__';
-			}      
-			foreach($this->_context[$use] as $name => $config)
-			{
-				if(!method_exists($this, '_print'.$name))
-				{
-					$this->_printErrorInfo($exception, 'Error message filter "'.$name.'" not found.');
-				}
-				else
-				{			
-					call_user_func_array(array($this, '_print'.$name), array_merge(array(0 => $exception), $config));
-				}
-			}
-		} // end _resolveContextInfo();	
-		
-		protected function _printErrorInfo($exception, $text)
-		{
-			echo '  			<p><strong>Exception information:</strong> '.$text."</p>\r\n";
-		} // end _printErrorInfo();
-
-		protected function _printStackInfo($exception, $title)
-		{
-			echo '		<p class="directive">'.$title.":</p>\r\n";
-			$data = $exception->getData();
-			$i = 1;
-			while(sizeof($data) > 0)
-			{
-				$item = array_shift($data);
-				if(sizeof($data) == 0)
-				{
-					echo "		<p class=\"directive\">".$i.". <span class=\"bad\">".$item."</span></p>\r\n";
-				}
-				else
-				{
-					echo "		<p class=\"directive\">".$i.". <span>".$item."</span></p>\r\n";
-				}
-				$i++;
-			}
-		} // end _printStackInfo();
-
-		protected function _printBasicConfiguration($exception)
-		{
-			/* null */
-		} // end _printBasicConfiguration();
-
-		protected function _printBacktrace($exception)
-		{
-			echo "		<p class=\"directive\"><strong>Debug backtrace:</strong></p>\r\n";
-			$data = array_reverse($exception->getTrace());
-			$data[] = array(
-				'function' => 'Opl_Debug_Exception',
-				'file' => $exception->getFile(),
-				'line' => $exception->getLine()
-			);
-			$size = sizeof($data);
-			echo "		<ul>";
-			while(sizeof($data) > 0)
-			{
-				$item = array_shift($data);
-
-				$name = (isset($item['class']) ? $item['class'].'::' : '').$item['function'];
-
-				if(sizeof($data) == 0)
-				{
-					echo "		<li><p class=\"directive\">".$size.". ".$name."() - <span class=\"bad\"><code>".basename($item['file']).'</code> ['.$item['line']."]</span></p></li>\r\n";
-				}
-				else
-				{
-					echo "		<li><p class=\"directive\">".$size.". ".$name."() - <span><code>".basename($item['file']).'</code> ['.$item['line']."]</span></p></li>\r\n";
-				}
-				$size--;
-			}
-			echo "		</ul>";
-		} // end _printBacktrace();
-	} // end Opl_ErrorHandler;
+		return true;
+	} // end display();
+} // end Opl_ErrorHandler;

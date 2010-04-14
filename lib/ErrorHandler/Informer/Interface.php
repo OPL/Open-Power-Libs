@@ -9,17 +9,24 @@
  * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id: Base.php 280 2010-01-16 11:56:41Z zyxist $
+ * $Id: ErrorHandler.php 235 2009-09-22 08:19:47Z zyxist $
  */
 
 /**
- * The exception class for Opl_Registry class.
+ * The interface for informers which provide additional information
+ * about exceptions in the generic error handler.
  *
  * @author Tomasz Jędrzejewski
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
-class Opl_Registry_Exception extends Exception
+interface Opl_ErrorHandler_Informer_Interface
 {
-	/* null */
-} // end Opl_Registry_Exception;
+	/**
+	 * Displays the extra piece of information about the exception.
+	 * 
+	 * @param Exception $exception The exception to process.
+	 * @param array $params The extra parameters passed from the port.
+	 */
+	public function display(Exception $exception, array $params);
+} // end Opl_ErrorHandler_Informer_Interface;

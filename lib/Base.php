@@ -16,6 +16,8 @@
  * The translation interface for OPL libraries.
  *
  * @author Tomasz Jędrzejewski
+ * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
+ * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
 interface Opl_Translation_Interface
 {
@@ -46,6 +48,8 @@ interface Opl_Translation_Interface
  *
  * @author Tomasz Jędrzejewski
  * @author Amadeusz Starzykiewicz
+ * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
+ * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
 class Opl_Loader
 {	
@@ -354,6 +358,8 @@ class Opl_Loader
  * for scalar values and for objects.
  *
  * @author Tomasz Jędrzejewski
+ * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
+ * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
 class Opl_Registry
 {
@@ -422,7 +428,7 @@ class Opl_Registry
 	 */
 	static public function setValue($name, $value)
 	{
-		self::$_states[$name] = $value;
+		self::$_values[$name] = $value;
 	} // end setValue();
 
 	/**
@@ -435,11 +441,11 @@ class Opl_Registry
 	 */
 	static public function getValue($name)
 	{
-		if(!isset(self::$_states[$name]))
+		if(!isset(self::$_values[$name]))
 		{
 			return NULL;
 		}
-		return self::$_states[$name];
+		return self::$_values[$name];
 	} // end getValue();
 } // end Opl_Registry;
 
@@ -448,6 +454,8 @@ class Opl_Registry
  * and plugin handling.
  *
  * @author Tomasz Jędrzejewski
+ * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
+ * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
 class Opl_Class
 {

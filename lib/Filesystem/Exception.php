@@ -16,6 +16,8 @@
  * The exception class for filesystem-related exceptions.
  *
  * @author Tomasz Jędrzejewski
+ * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
+ * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
 class Opl_Filesystem_Exception extends Exception
 {

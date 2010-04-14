@@ -9,33 +9,31 @@
  * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id$
+ * $Id: ErrorHandler.php 235 2009-09-22 08:19:47Z zyxist $
  */
 
 /**
- * The base exception class for the exceptions across Open
- * Power Libs. It provides the library detection.
+ * The interface for exceptions that might contain custom stack
+ * data.
  *
  * @author Tomasz Jędrzejewski
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
-class Opl_Exception extends Exception
+interface Opl_Exception_Stack_Interface
 {
 	/**
-	 * Returns the main OPL library class that threw the exception.
+	 * Assigns the custom stack data to the exception. The stack may
+	 * be either an array or SplStack object.
 	 *
-	 * @return Opl_Class The main class of the exception library.
+	 * @param array|SplStack $data The custom stack data.
 	 */
-	public function getLibrary()
-	{
-		$name = explode('_', get_class_name($this));
-		$name = strtolower($name[0]);
+	public function setStackData($data);
 
-		if(Opl_Registry::exists($name))
-		{
-			return Opl_Registry::get($name);
-		}
-		return null;
-	} // end getLibrary();
-} // end Opl_Exception;
+	/**
+	 * Returns the custom stack data from the exception.
+	 *
+	 * @return array|SplStack The custom stack data.
+	 */
+	public function getStackData();
+} // end Opl_ErrorHandler_Informer_Interface;
