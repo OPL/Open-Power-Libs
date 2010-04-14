@@ -7,13 +7,9 @@
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
 
-require_once('LoaderTest.php');
-require_once('RegistryTest.php');
-require_once('ErrorHandlerTest.php');
+require_once('OptionTest.php');
 
-require_once dirname(__FILE__).'/Getopt/AllTests.php';
-
-class Package_AllTests extends PHPUnit_Framework_TestSuite
+class Package_Getopt_AllTests extends PHPUnit_Framework_TestSuite
 {
 
 	/**
@@ -23,12 +19,8 @@ class Package_AllTests extends PHPUnit_Framework_TestSuite
 	 */
 	public static function suite()
 	{
-		$suite = new Package_AllTests('Package');
-		$suite->addTestSuite('Package_LoaderTest');
-		$suite->addTestSuite('Package_RegistryTest');
-		$suite->addTestSuite('Package_ErrorHandlerTest');
-
-		$suite->addTestSuite(Package_Getopt_AllTests::suite());
+		$suite = new Package_AllTests('Package_Getopt');
+		$suite->addTestSuite('Package_Getopt_OptionTest');
 
 		return $suite;
 	} // end suite();

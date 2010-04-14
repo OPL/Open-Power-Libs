@@ -9,7 +9,7 @@
  * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id: Base.php 280 2010-01-16 11:56:41Z zyxist $
+ * $Id$
  */
 
 /**

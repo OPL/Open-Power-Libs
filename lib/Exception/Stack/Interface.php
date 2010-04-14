@@ -9,7 +9,7 @@
  * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id: ErrorHandler.php 235 2009-09-22 08:19:47Z zyxist $
+ * $Id$
  */
 
 /**

@@ -9,17 +9,19 @@
  * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id$
+ * $Id: Base.php 331 2010-04-14 07:23:03Z zyxist $
  */
 
 /**
- * The exception class for Opl_Registry class.
+ * The class provides a convenient wrapper for input/output
+ * streams. It is primarily used to wrap stdin, stdout and
+ * stderr application streams.
  *
  * @author Tomasz Jędrzejewski
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
-class Opl_Registry_Exception extends Exception
+class Opl_Console_Stream
 {
-	/* null */
-} // end Opl_Registry_Exception;
+
+} // end Opl_Console_Stream;
