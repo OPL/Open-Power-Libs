@@ -40,7 +40,7 @@
 		public function getLibrary()
 		{
 			$tokens = explode('_', get_class_name($this));
-			return Opl_Base::get(strtolower($tokens[0]));
+			return Opl_Registry::get(strtolower($tokens[0]));
 		} // end getLibrary();
 		
 		public function clean()
