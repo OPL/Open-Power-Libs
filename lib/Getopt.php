@@ -91,13 +91,33 @@ class Opl_Getopt implements IteratorAggregate
 
 		$this->_availableOpts[$name] = $option;
 
+		$ok = false;
 		if(($flag = $option->getShortFlag()) !== null)
 		{
+			if(isset($this->_shortFlags[$flag]))
+			{
+				throw new Opl_Getopt_Exception('The option '.$name.' tries to register -'.$flag.' which is already registered.');
+			}
 			$this->_shortFlags[$flag] = $option;
+			$ok = true;
 		}
 		if(($flag = $option->getLongFlag()) !== null)
 		{
+			if(isset($this->_longFlags[$flag]))
+			{
+				throw new Opl_Getopt_Exception('The option '.$name.' tries to register --'.$flag.' which is already registered.');
+			}
 			$this->_longFlags[$flag] = $option;
+			$ok = true;
+		}
+
+		if(!$ok)
+		{
+			if($this->_data !== null)
+			{
+				throw new Opl_Getopt_Exception('The plain text option '.$name.' is already registered in getopt.');
+			}
+			$this->_data = $option;
 		}
 	} // end addOption();
 
@@ -158,7 +178,7 @@ class Opl_Getopt implements IteratorAggregate
 		for($i = 0; $i < $cnt; $i++)
 		{
 			// Long option
-			if(strpos($input[$i], '--') == 0)
+			if(strpos($input[$i], '--') === 0)
 			{
 				if($this->_flags & self::AUTO_HELP)
 				{
@@ -189,53 +209,37 @@ class Opl_Getopt implements IteratorAggregate
 					throw new Opl_Getopt_Exception('Unknown option: --'.$optionName);
 				}
 				$option = $this->_longFlags[$optionName];
-				$argument = $option->getArgument();
+				$this->_parseOption($option, '--'.$optionName, $optionArgs);
 
-				// Test the arguments
-				if($argument === null && $optionArgs !== null)
-				{
-					throw new Opl_Getopt_Exception('The option --'.$optionName.' does not take any arguments.');
-				}
-				elseif($argument[0] === Opl_Getopt_Option::REQUIRED && $optionArgs === null)
-				{
-					throw new Opl_Getopt_Exception('The option --'.$optionName.' requires an argument.');
-				}
-
-				// Add the argument.
-				if($optionArgs !== null)
-				{
-					if($option->isFound())
-					{
-						$argVal = $option->getValue();
-						if(is_array($argVal))
-						{
-							$argVal[] = $this->_validateArgument('--'.$optionName, $optionArgs, $argument[1]);
-							$option->setValue($argVal);
-						}
-						else
-						{
-							$option->setValue(array($argVal, $this->_validateArgument('--'.$optionName, $optionArgs, $argument[1])));
-						}
-					}
-					else
-					{
-						$option->setValue($this->_validateArgument('--'.$optionName, $optionArgs, $argument[1]));
-					}
-				}
-
-				// Now check if it can occur multiple times...
-				if(!($this->_flags & self::ALLOW_INCREMENTING) && $option->isFound())
-				{
-					throw new Opl_Getopt_Exception('--'.$optionName.' has been used twice.');
-				}
-
-				$option->setFound(true);
-				$this->_foundOpts[] = $option;
 			}
 			// Short option
-			elseif(strpos($input[$i], '-') == 0)
+			elseif(strpos($input[$i], '-') === 0)
 			{
+				$options = substr($input[$i], 1, strlen($input[$i]) - 1);
+				// Attempt to parse the short flag argument
+				$argument = null;
+				$length = strlen($options);
+				if(strlen($options) == 1 && $this->_flags & self::ALLOW_SHORT_ARGS)
+				{
+					if(isset($input[$i+1]))
+					{
+						if(strpos($input[$i+1], '--') === false && strpos($input[$i+1], '-') === false)
+						{
+							$argument = $input[$i+1];
+							$i++;
+						}
+					}
+				}
 
+				// Now parse the switches
+				for($j = 0; $j < $length; $j++)
+				{
+					if(!isset($this->_shortFlags[$options[$j]]))
+					{
+						throw new Opl_Getopt_Exception('Unknown option: -'.$options[$j]);
+					}
+					$this->_parseOption($this->_shortFlags[$options[$j]], '-'.$options[$j], $argument);
+				}
 			}
 			// Text arguments
 			else
@@ -344,4 +348,59 @@ class Opl_Getopt implements IteratorAggregate
 		}
 		return $argument;
 	} // end _validateArgument();
+
+	/**
+	 * Does something strange with the option and its argument.
+	 *
+	 * @internal
+	 * @throws Opl_Getopt_Exception
+	 * @param Opl_Getopt_Option $option The option
+	 * @param string $optionName The option long name for debug purposes.
+	 * @param string $optionArgs The option argument
+	 */
+	private function _parseOption(Opl_Getopt_Option $option, $optionName, $optionArgs)
+	{
+		$argument = $option->getArgument();
+
+		// Test the arguments
+		if($argument === null && $optionArgs !== null)
+		{
+			throw new Opl_Getopt_Exception('The option '.$optionName.' does not take any arguments.');
+		}
+		elseif($argument[0] === Opl_Getopt_Option::REQUIRED && $optionArgs === null)
+		{
+			throw new Opl_Getopt_Exception('The option '.$optionName.' requires an argument.');
+		}
+
+		// Add the argument.
+		if($optionArgs !== null)
+		{
+			if($option->isFound())
+			{
+				$argVal = $option->getValue();
+				if(is_array($argVal))
+				{
+					$argVal[] = $this->_validateArgument($optionName, $optionArgs, $argument[1]);
+					$option->setValue($argVal);
+				}
+				else
+				{
+					$option->setValue(array($argVal, $this->_validateArgument($optionName, $optionArgs, $argument[1])));
+				}
+			}
+			else
+			{
+				$option->setValue($this->_validateArgument($optionName, $optionArgs, $argument[1]));
+			}
+		}
+
+		// Now check if it can occur multiple times...
+		if(!($this->_flags & self::ALLOW_INCREMENTING) && $option->isFound())
+		{
+			throw new Opl_Getopt_Exception($optionName.' has been used twice.');
+		}
+
+		$option->setFound(true);
+		$this->_foundOpts[] = $option;
+	} // end _parseOption();
 } // end Opl_Console_Getopt;
