@@ -19,7 +19,7 @@
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
-class Opl_ErrorHandler_Port_Opl implements Opl_ErrorHandler_Port_Interface
+class Opl_ErrorHandler_Port implements Opl_ErrorHandler_Port_Interface
 {
 	/**
 	 * Matches the exception to the port.
@@ -54,4 +54,16 @@ class Opl_ErrorHandler_Port_Opl implements Opl_ErrorHandler_Port_Interface
 			'backtrace' => array(),
 		);
 	} // end getContext();
-} // end Opl_ErrorHandler_Port_Opl;
+
+	/**
+	 * Registers the OPL error handling port in OPL error handler together
+	 * with the necessary informers.
+	 *
+	 * @static
+	 * @param Opl_ErrorHandler $handler The OPL error handler
+	 */
+	static public function register(Opl_ErrorHandler $handler)
+	{
+		$handler->addPort(new Opl_ErrorHandler_Port());
+	} // end register();
+} // end Opl_ErrorHandler_Port;
