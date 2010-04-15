@@ -21,6 +21,15 @@
  */
 class Opl_Getopt_Option
 {
+	const REQUIRED = 0;
+	const OPTIONAL = 1;
+
+	const INTEGER = 0;
+	const BOOLEAN = 1;
+	const ENABLED = 2;
+	const STRING = 3;
+	const ANYTHING = 4;
+
 	/**
 	 * The option name which should be unique. It is used for identifying the option
 	 * in the script.
@@ -57,6 +66,30 @@ class Opl_Getopt_Option
 	 * @var mixed
 	 */
 	private $_argument;
+
+	/**
+	 * The argument configuration
+	 * @var array
+	 */
+	private $_argumentCfg = null;
+
+	/**
+	 * Minimum number of occurences.
+	 * @var integer
+	 */
+	private $_minOccurences = 0;
+
+	/**
+	 * Maximum number of occurences.
+	 * @var integer
+	 */
+	private $_maxOccurences = 1;
+
+	/**
+	 * The number of actual occurences.
+	 * @var integer
+	 */
+	private $_occurences = 0;
 
 	/**
 	 * Creates a new Getopt option. In the constructor, we can specify the
@@ -141,6 +174,30 @@ class Opl_Getopt_Option
 	} // end getLongFlag();
 
 	/**
+	 * Sets the information about the argument. Use the class constants
+	 * to specify whether the argument is REQUIRED or OPTIONAL. If no
+	 * argument is specified for an option, its occurence is treated
+	 * as an error.
+	 *
+	 * The argument type allows to perform a validation. The validation
+	 * is skipped if the programmer sets the type to ANYTHING.
+	 *
+	 * Implements fluent interface.
+	 * 
+	 * @param int $required Is the argument required or optional?
+	 * @param int $type The expected value type.
+	 * @return Opt_Getopt_Option Fluent interface
+	 */
+	public function setArgument($required, $type)
+	{
+		$this->_argumentCfg = array(0 =>
+			(int)$required,
+			(int)$type
+		);
+		return $this;
+	} // end setArgument();
+
+	/**
 	 * Returns the information about the argument.
 	 *
 	 * @internal
@@ -148,7 +205,7 @@ class Opl_Getopt_Option
 	 */
 	public function getArgument()
 	{
-		return null;
+		return $this->_argumentCfg;
 	} // end getArgument();
 
 	/**
@@ -161,6 +218,14 @@ class Opl_Getopt_Option
 	 */
 	public function setFound($state)
 	{
+		if($state === true)
+		{
+			$this->_occurences++;
+		}
+		else
+		{
+			$this->_occurences = 0;
+		}
 		$this->_found = (bool)$state;
 	} // end setFound();
 
@@ -195,4 +260,58 @@ class Opl_Getopt_Option
 	{
 		return $this->_argument;
 	} // end getValue();
+
+	/**
+	 * Sets the minimum number of occurences. Implements fluent interface.
+	 *
+	 * @param integer $occurences The number of minimum option occurences
+	 * @return Opt_Getopt_Option Fluent interface
+	 */
+	public function setMinOccurences($occurences)
+	{
+		$this->_minOccurences = (int)$occurences;
+		return $this;
+	} // end setMinOccurences();
+
+	/**
+	 * Sets the maximum number of occurences. Implements fluent interface.
+	 *
+	 * @param integer $occurences The number of maximum option occurences
+	 * @return Opt_Getopt_Option Fluent interface
+	 */
+	public function setMaxOccurences($occurences)
+	{
+		$this->_maxOccurences = (int)$occurences;
+		return $this;
+	} // end setMaxOccurences();
+
+	/**
+	 * Returns the number of minimum occurences.
+	 *
+	 * @return integer
+	 */
+	public function getMinOccurences()
+	{
+		return $this->_minOccurences;
+	} // end getMinOccurences();
+
+	/**
+	 * Returns the number of maximum occurences.
+	 *
+	 * @return integer
+	 */
+	public function getMaxOccurences()
+	{
+		return $this->_maxOccurences;
+	} // end getMaxOccurences();
+
+	/**
+	 * Returns the number of actual occurences.
+	 *
+	 * @return integer
+	 */
+	public function getOccurences()
+	{
+		return $this->_occurences;
+	} // end getOccurences();
 } // end Opl_Getopt_Option;

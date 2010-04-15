@@ -12,7 +12,6 @@ if($_SERVER['SCRIPT_FILENAME'] !== '')
 	echo "Loading bootstrap...\n";
 
 	$config = parse_ini_file(dirname(__FILE__).'/../paths.ini', true);
-	echo 'DUPPE';
 	require($config['libraries']['Opl'].'Base.php');
 	Opl_Loader::loadPaths($config);
 	Opl_Loader::setCheckFileExists(false);

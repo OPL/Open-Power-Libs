@@ -102,4 +102,48 @@ class Package_Getopt_OptionTest extends PHPUnit_Framework_TestCase
 		$option->setValue(42);
 		$this->assertEquals(42, $option->getValue());
 	} // end testArgumentValue();
+
+	/**
+	 * @covers Opl_Getopt_Option::setMinOccurences
+	 * @covers Opl_Getopt_Option::getMinOccurences
+	 */
+	public function testMinOccurencesSetting()
+	{
+		$option = new Opl_Getopt_Option('foo', 'x');
+		$option->setMinOccurences(5);
+		$this->assertEquals(5, $option->getMinOccurences());
+	} // end testMinOccurencesSetting();
+
+	/**
+	 * @covers Opl_Getopt_Option::setMinOccurences
+	 * @covers Opl_Getopt_Option::getMinOccurences
+	 */
+	public function testMaxOccurencesSetting()
+	{
+		$option = new Opl_Getopt_Option('foo', 'x');
+		$option->setMaxOccurences(5);
+		$this->assertEquals(5, $option->getMaxOccurences());
+	} // end testMaxOccurencesSetting();
+
+	/**
+	 * @covers Opl_Getopt_Option::setMinOccurences
+	 * @covers Opl_Getopt_Option::getMinOccurences
+	 */
+	public function testCountingOccurencesByFoundStatus()
+	{
+		$option = new Opl_Getopt_Option('foo', 'x');
+		$this->assertEquals(0, $option->getOccurences());
+
+		$option->setFound(true);
+		$this->assertEquals(1, $option->getOccurences());
+
+		$option->setFound(true);
+		$this->assertEquals(2, $option->getOccurences());
+
+		$option->setFound(true);
+		$this->assertEquals(3, $option->getOccurences());
+
+		$option->setFound(false);
+		$this->assertEquals(0, $option->getOccurences());
+	} // end testMaxOccurencesSetting();
 } // end Package_Getopt_OptionTest;

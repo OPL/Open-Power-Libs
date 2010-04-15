@@ -175,7 +175,7 @@ class Opl_Getopt implements IteratorAggregate
 						throw new Opl_Getopt_Exception('Long flag arguments are not allowed.');
 					}
 					$optionName = ltrim(substr($input[$i], 0, $id), '-');
-					$optionArgs = substr($input[$i], $id, strlen($input[$i]) - $id);
+					$optionArgs = substr($input[$i], $id+1, strlen($input[$i]) - $id - 1);
 				}
 				else
 				{
@@ -201,11 +201,36 @@ class Opl_Getopt implements IteratorAggregate
 					throw new Opl_Getopt_Exception('The option --'.$optionName.' requires an argument.');
 				}
 
+				// Add the argument.
 				if($optionArgs !== null)
 				{
-					$option->setArgument($this->_validateArgument('--'.$optionName, $optionArgs, $argument[1]));
+					if($option->isFound())
+					{
+						$argVal = $option->getValue();
+						if(is_array($argVal))
+						{
+							$argVal[] = $this->_validateArgument('--'.$optionName, $optionArgs, $argument[1]);
+							$option->setValue($argVal);
+						}
+						else
+						{
+							$option->setValue(array($argVal, $this->_validateArgument('--'.$optionName, $optionArgs, $argument[1])));
+						}
+					}
+					else
+					{
+						$option->setValue($this->_validateArgument('--'.$optionName, $optionArgs, $argument[1]));
+					}
 				}
+
+				// Now check if it can occur multiple times...
+				if(!($this->_flags & self::ALLOW_INCREMENTING) && $option->isFound())
+				{
+					throw new Opl_Getopt_Exception('--'.$optionName.' has been used twice.');
+				}
+
 				$option->setFound(true);
+				$this->_foundOpts[] = $option;
 			}
 			// Short option
 			elseif(strpos($input[$i], '-') == 0)
@@ -231,6 +256,22 @@ class Opl_Getopt implements IteratorAggregate
 				$this->_data->setFound(true);
 			}
 		}
+
+		// Test the number of occurences of each option.
+		foreach($this->_availableOpts as $option)
+		{
+			$occurences = $option->getOccurences();
+			if($occurences < $option->getMinOccurences())
+			{
+				throw new Opl_Getopt_Exception('The option '.$option->getName().' must be used at least '.$option->getMinOccurences().' time(s).');
+			}
+			if($occurences > $option->getMaxOccurences())
+			{
+				throw new Opl_Getopt_Exception('The option '.$option->getName().' cannot be used more than '.$option->getMaxOccurences().' time(s).');
+			}
+		}
+
+		return true;
 	} // end parse();
 
 	/**
