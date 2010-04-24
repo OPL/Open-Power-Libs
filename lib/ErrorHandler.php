@@ -44,6 +44,7 @@ class Opl_ErrorHandler
 		$this->addInformer('backtrace', 'Opl_ErrorHandler_Informer_Backtrace');
 		$this->addInformer('stack', 'Opl_ErrorHandler_Informer_Stack');
 		$this->addInformer('information', 'Opl_ErrorHandler_Informer_ErrorInformation');
+		$this->addInformer('dependency', 'Opl_ErrorHandler_Informer_Dependency');
 	} // end __construct();
 
 	/**

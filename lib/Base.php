@@ -12,6 +12,11 @@
  * $Id$
  */
 
+if(version_compare(PHP_VERSION, '5.3.0', '<'))
+{
+	die('Open Power Libs requires PHP 5.3.0 or newer. Your version: '.PHP_VERSION);
+}
+
 /**
  * The translation interface for OPL libraries.
  *

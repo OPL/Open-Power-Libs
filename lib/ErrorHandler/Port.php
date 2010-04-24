@@ -50,6 +50,13 @@ class Opl_ErrorHandler_Port implements Opl_ErrorHandler_Port_Interface
 	 */
 	public function getContext(Exception $exception)
 	{
+		if($exception instanceof Opl_Dependency_Exception)
+		{
+			return array(
+				'dependency' => array(),
+			);
+		}
+
 		return array(
 			'backtrace' => array(),
 		);
