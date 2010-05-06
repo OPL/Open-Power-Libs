@@ -33,12 +33,43 @@ abstract class Opl_Stream_Output implements Opl_Stream_Interface
 	protected $_stream;
 
 	/**
+	 * The end-of-line symbol.
+	 * @var string
+	 */
+	static protected $_eol = PHP_EOL;
+
+	/**
+	 * Returns the current end-of-line symbol. Unless the programmer
+	 * changed it, it is set to PHP_EOL.
+	 *
+	 * @static
+	 * @return string
+	 */
+	static public function getEol()
+	{
+		return self::$_eol;
+	} // end getEndOfLine();
+
+	/**
+	 * Sets the end-of-line symbols used by the output streams.
+	 *
+	 * @static
+	 * @param string $eol The new end-of-line symbol.
+	 */
+	static public function setEol($eol)
+	{
+		self::$_eol = (string)$eol;
+	} // end setEol();
+
+	/**
 	 * Flushes the remaining bytes and forces them to be saved in the stream.
 	 */
 	abstract function flush();
 
 	/**
-	 * Reads the specified number of bytes from a stream.
+	 * Writes the specified string to a stream. The optional arguments
+	 * may control the part of the input string that will be actually
+	 * written.
 	 *
 	 * @throws Opl_Stream_Exception
 	 * @param string $bytes The data to write.
@@ -67,37 +98,20 @@ abstract class Opl_Stream_Output implements Opl_Stream_Interface
 	} // end write();
 
 	/**
-	 * Packs the data into a binary format and writes them to the stream.
-	 * The format is identical with the pack() function format and its size
-	 * must match the number of arguments.
+	 * Writes a string to a stream, terminating it with an end-of-line
+	 * symbol.
 	 *
-	 * @throws DomainException
-	 * @throws Opl_Stream_Exception
-	 * @param string $format The binary format (same as for pack() function).
-	 * @param array $arguments The arguments
+	 * @param string $string The string to write.
 	 */
-	public function writePacked($format, $arguments)
+	public function writeLine($string)
 	{
-		if(!is_array($arguments) && !$arguments instanceof Traversable)
+		if(!is_resource($this->_stream))
 		{
-			throw new DomainException('The specified arguments must be either an array or a data structure.');
-		}
-		
-		if(strlen($format) != sizeof($arguments))
-		{
-			throw new DomainException('The format size must match the number of arguments.');
+			throw new Opl_Stream_Exception('Output stream is not opened.');
 		}
 
-		$i = 0;
-		$stream = '';
-		foreach($arguments as $arg)
-		{
-			$stream .= pack($format[$i], $arg);
-			$i++;
-		}
-
-		$this->write($stream);
-	} // end writePacked();
+		fwrite($this->_stream, $bytes.self::$_eol);
+	} // end writeLine();
 
 	/**
 	 * Writes a compound PHP type to the stream. For scalar values, it works

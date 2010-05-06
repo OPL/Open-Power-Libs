@@ -15,7 +15,6 @@
 /**
  * The class represents the script standard input.
  *
- * @abstract
  * @author Tomasz Jędrzejewski
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License

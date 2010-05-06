@@ -13,86 +13,42 @@
  */
 
 /**
- * The input stream abstract primitive.
+ * The class represents the GZIP-compressed file input stream.
  *
- * @abstract
  * @author Tomasz Jędrzejewski
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
-abstract class Opl_Stream_Input implements Opl_Stream_Interface
+class Opl_Stream_Compressed_Input extends Opl_Stream_Input
 {
-	const NONBLOCKING = 0;
-	const BLOCKING = 1;
-
 	/**
-	 * The stream.
+	 * Constructs the compressed file input stream. The file to open may be
+	 * specified either as a string or SplFileInfo object.
 	 *
-	 * @var resource
+	 * @throws Opl_Filesystem_Exception
+	 * @param string|SplFileInfo The file to open for reading.
 	 */
-	protected $_stream;
-
-	/**
-	 * The current blocking mode.
-	 *
-	 * @var integer
-	 */
-	private $_blocking = 1;
-
-	/**
-	 * The reading pointer
-	 * 
-	 * @var integer
-	 */
-	protected $_readingPtr = 0;
-
-	/**
-	 * Returns true, if there are any data available in the buffer that may be
-	 * read immediately. If the stream does not support checking the buffer status,
-	 * the method is obliged to throw an exception.
-	 *
-	 * @throws Opl_Stream_Exception
-	 * @return boolean
-	 */
-	abstract function available();
-
-	/**
-	 * Sets the blocking mode: either NONBLOCKING or BLOCKING. Returns true,
-	 * if the operation was successful.
-	 *
-	 * @throws DomainException
-	 * @param integer $mode The blocking mode
-	 * @return boolean The operation status.
-	 */
-	public function setBlocking($mode)
+	public function __construct($file)
 	{
-		if($mode != 0 && $mode != 1)
+		if($file instanceof SplFileInfo)
 		{
-			throw new DomainException('Invalid blocking mode: either NONBLOCKING or BLOCKING expected');
+			$file = $file->getFilename();
 		}
-
-		if(is_resource($this->_stream))
+		else
 		{
-			if(stream_set_blocking($this->_stream, $mode))
+			if(!file_exists($file))
 			{
-				$this->_blocking = $mode;
-				return true;
+				throw new Opl_Filesystem_Exception('Compressed file '.$file.' does not exist.');
 			}
-			return false;
 		}
-		$this->_blocking = $mode;
-		return true;
-	} // end setBlocking();
+		$this->_stream = gzopen($file, 'r');
 
-	/**
-	 * Returns the current blocking mode for this stream.
-	 *
-	 * @return integer The current blocking mode.
-	 */
-	public function getBlocking()
-	{
-		return $this->_blocking;
-	} // end getBlocking();
+		if(!is_resource($this->_stream))
+		{
+			$this->_stream = null;
+			throw new Opl_Filesystem_Exception('Compressed file '.$file.' is not accessible for reading.');
+		}
+	} // end __construct();
 
 	/**
 	 * Reads the specified number of bytes from a stream. If the stream
@@ -111,15 +67,11 @@ abstract class Opl_Stream_Input implements Opl_Stream_Interface
 			throw new Opl_Stream_Exception('Input stream is not opened.');
 		}
 
-		$content = stream_get_line($this->_stream, (integer)$byteNum, '');
+		$content = gzread($this->_stream, (integer)$byteNum);
 
 		if($content === false)
 		{
 			return null;
-		}
-		elseif($content === '' && $byteNum > 0)
-		{
-			throw new Opl_Stream_Exception('Host disconnected.');
 		}
 		$this->_readingPtr += strlen($content);
 		return $content;
@@ -140,7 +92,7 @@ abstract class Opl_Stream_Input implements Opl_Stream_Interface
 			throw new Opl_Stream_Exception('Input stream is not opened.');
 		}
 
-		$content = fgets($this->_stream, (integer)$length, "\r\n");
+		$content = gzgets($this->_stream, (integer)$length, "\r\n");
 
 		if($content === false)
 		{
@@ -151,13 +103,10 @@ abstract class Opl_Stream_Input implements Opl_Stream_Interface
 	} // end readLine();
 
 	/**
-	 * Resets the stream, setting the internal cursor to the beginning.
-	 */
-	abstract function reset();
-
-	/**
 	 * Skips the specified number of bytes in the input. Returns the
-	 * number of actual skipped bytes.
+	 * number of actual skipped bytes. Note that in case of this stream,
+	 * the number of bytes does mean the output bytes, not the actual
+	 * binary data taken by the decompression algorithm.
 	 *
 	 * @param int $byteNum The number of bytes to skip.
 	 * @return int The number of actual skipped bytes.
@@ -168,19 +117,49 @@ abstract class Opl_Stream_Input implements Opl_Stream_Interface
 		{
 			throw new Opl_Stream_Exception('Input stream is not opened.');
 		}
-		$actual = strlen((string)stream_get_line($this->_stream, (integer)$byteNum, ''));
+		$actual = strlen((string)gzread($this->_stream, (integer)$byteNum));
 		$this->_readingPtr += $actual;
 
 		return $actual;
 	} // end skip();
-	
+
 	/**
-	 * Returns true, if the stream is open.
+	 * Returns true, if there are any data available in the stream.
 	 *
-	 * @return boolean Is the stream open?
+	 * @throws Opl_Stream_Exception
+	 * @return boolean
 	 */
-	public function isOpen()
+	public function available()
 	{
-		return is_resource($this->_stream);
-	} // end isOpen();
-} // end Opl_Stream_Input;
+		if(!is_resource($this->_stream))
+		{
+			throw new Opl_Stream_Exception('Input stream is not opened.');
+		}
+		return !gzeof($this->_stream);
+	} // end available();
+
+	/**
+	 * Closes the input stream.
+	 */
+	public function close()
+	{
+		if(!is_resource($this->_stream))
+		{
+			throw new Opl_Stream_Exception('Input stream is not opened.');
+		}
+		gzclose($this->_stream);
+		$this->_stream = null;
+	} // end close();
+
+	/**
+	 * Resets the input stream.
+	 */
+	public function reset()
+	{
+		if(!is_resource($this->_stream))
+		{
+			throw new Opl_Stream_Exception('Input stream is not opened.');
+		}
+		gzrewind($this->_stream);
+	} // end reset();
+} // end Opl_Stream_Compressed_Input;
