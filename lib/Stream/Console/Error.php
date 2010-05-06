@@ -13,15 +13,20 @@
  */
 
 /**
- * The class provides a convenient wrapper for input/output
- * streams. It is primarily used to wrap stdin, stdout and
- * stderr application streams.
+ * The class represents the script standard error output.
  *
+ * @abstract
  * @author Tomasz Jędrzejewski
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
-class Opl_Console_Stream
+class Opl_Stream_Console_Error extends Opl_Stream_Console_Output
 {
-
-} // end Opl_Console_Stream;
+	/**
+	 * Constructs the standard error output stream.
+	 */
+	public function __construct()
+	{
+		$this->_stream = fopen(STDERR, 'w');
+	} // end __construct();
+} // end Opl_Stream_Console_Error;
