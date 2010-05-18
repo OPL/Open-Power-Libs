@@ -314,4 +314,9 @@ class Opl_Getopt_Option
 	{
 		return $this->_occurences;
 	} // end getOccurences();
+
+	public function getHelp()
+	{
+		return $this -> _help;
+	}
 } // end Opl_Getopt_Option;

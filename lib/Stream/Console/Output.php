@@ -26,7 +26,7 @@ class Opl_Stream_Console_Output extends Opl_Stream_Output
 	 */
 	public function __construct()
 	{
-		$this->_stream = fopen(STDOUT, 'w');
+		$this->_stream = STDOUT;
 	} // end __construct();
 
 	/**

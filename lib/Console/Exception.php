@@ -13,13 +13,13 @@
  */
 
 /**
- * The exception class for stream operations.
+ * The exception class for console applications.
  *
  * @author Tomasz Jędrzejewski
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
-class Opl_Stream_Exception extends Opl_Exception
+class Opl_Console_Exception extends Opl_Exception
 {
 	/* null */
-} // end Opl_Stream_Exception;
+} // end Opl_Console_Exception;

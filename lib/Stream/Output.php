@@ -110,7 +110,7 @@ abstract class Opl_Stream_Output implements Opl_Stream_Interface
 			throw new Opl_Stream_Exception('Output stream is not opened.');
 		}
 
-		fwrite($this->_stream, $bytes.self::$_eol);
+		fwrite($this->_stream, $string.self::$_eol);
 	} // end writeLine();
 
 	/**

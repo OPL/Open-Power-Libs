@@ -184,6 +184,7 @@ class Opl_Getopt implements IteratorAggregate
 				{
 					if($input[$i] == '--help')
 					{
+						$this->printHelp();
 						return false;
 					}
 				}
@@ -283,9 +284,16 @@ class Opl_Getopt implements IteratorAggregate
 	 *
 	 * @param Opl_Console_Stream $stdout The output stream used for rendering.
 	 */
-	public function printHelp(Opl_Console_Stream $stdout)
+	public function printHelp()
 	{
-
+		$stdout = Opl_Registry::get('stdout');
+		$stdout->writeLine('Help');
+		foreach($this->_availableOpts as $option)
+		{
+			$stdout->writeLine('-'.$option->getShortFlag().($option->getArgument() !== null ? ' ...' : '').
+				'/--' . $option->getLongFlag() . ($option->getArgument() !== null ? '=...' : '').' - '.
+						$option->getHelp());
+		}
 	} // end printHelp();
 
 	/**

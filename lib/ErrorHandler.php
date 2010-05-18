@@ -28,13 +28,13 @@ class Opl_ErrorHandler
 	 * The port list.
 	 * @var array
 	 */
-	private $_ports = array();
+	protected $_ports = array();
 
 	/**
 	 * The informer list.
 	 * @var array
 	 */
-	private $_informers = array();
+	protected $_informers = array();
 
 	/**
 	 * Creates an instance of the error handler.
@@ -120,7 +120,7 @@ class Opl_ErrorHandler
 		if(is_string($this->_informers[(string)$name]))
 		{
 			$name = $this->_informers[(string)$name];
-			$object = new $name();
+			$object = new $name('http');
 			if(!$object instanceof Opl_ErrorHandler_Informer_Interface)
 			{
 				// Invalid value, skip it!

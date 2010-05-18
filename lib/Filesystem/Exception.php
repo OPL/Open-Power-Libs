@@ -19,7 +19,7 @@
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
-class Opl_Filesystem_Exception extends Exception
+class Opl_Filesystem_Exception extends Opl_Exception
 {
 	/**
 	 * The name of the file or directory that the exception concerns.

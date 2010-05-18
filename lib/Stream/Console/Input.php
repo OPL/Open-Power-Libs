@@ -26,7 +26,7 @@ class Opl_Stream_Console_Input extends Opl_Stream_Input
 	 */
 	public function __construct()
 	{
-		$this->_stream = fopen(STDIN, 'r');
+		$this->_stream = STDIN;
 	} // end __construct();
 
 	/**
