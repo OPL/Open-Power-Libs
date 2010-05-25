@@ -274,8 +274,8 @@ class Opl_Loader
 			return true;
 		}
 
-		$replacement = str_replace(array('_', '\\'), DIRECTORY_SEPARATOR, $className);
-		$id = strpos($replacement, DIRECTORY_SEPARATOR);
+		$replacement = str_replace(array('_', '\\'), DIRECTORY_SEPARATOR, ltrim($className, '\\'));
+		$id = strpos($replacement, DIRECTORY_SEPARATOR, 1);
 		$wholeName = false;
 		// Handle the situation if there is no "_" in the class name
 		if($id === false)
@@ -286,7 +286,7 @@ class Opl_Loader
 		}
 		else
 		{
-			$library = substr($className, 0, $id);
+			$library = substr($replacement, 0, $id);
 		}
 		// Check if autoloader have to handle not registered libraries
 		if(!isset(self::$_libraries[$library]))
@@ -308,7 +308,7 @@ class Opl_Loader
 			$path = $data['basePath'].$replacement.'.php';
 			if(self::$_fileCheck == true && !file_exists($path))
 			{
-				return true;
+				return false;
 			}
 			require($path);
 			return true;
@@ -325,7 +325,7 @@ class Opl_Loader
 			}
 			if(self::$_fileCheck == true && !file_exists($file))
 			{
-				return true;
+				return false;
 			}
 			require($path);
 			return true;
