@@ -16,7 +16,7 @@
  * The core of the command-line interface. Allows discovering and executing
  * new actions.
  *
- * @author Paweł Łukasiewicz
+ * @author Paweł Łuczkiewicz
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
@@ -48,6 +48,15 @@ class Opl_Console
 	 * @var string
 	 */
 	protected $_default = null;
+
+	/**
+	 * Stores the class instance in the OPL registry under
+	 * the key 'console'.
+	 */
+	public function __construct()
+	{
+		Opl_Registry::set('console', $this);
+	} // end __construct();
 
 	/**
 	 * Sets the console application flags. Implements fluent
@@ -181,9 +190,16 @@ class Opl_Console
 	{
 		$action = isset($argv[1]) ? $argv[1] : $this->_default;
 
-		Opl_Registry::set('stdout', new Opl_Stream_Console_Output);
-		Opl_Registry::set('stdin', new Opl_Stream_Console_Input);
+		if(!Opl_Registry::exists('stdout')) 
+		{
+			Opl_Registry::set('stdout', new Opl_Stream_Console_Output);
+		}
 
+		if(!Opl_Registry::exists('stdin'))
+		{
+			Opl_Registry::set('stdin', new Opl_Stream_Console_Input);
+		}
+		
 		if(isset($this->_actions[$action]))
 		{
 			unset($argv[0], $argv[1]);

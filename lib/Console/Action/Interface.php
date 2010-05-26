@@ -15,7 +15,7 @@
 /**
  * The generic interface for console actions.
  *
- * @author Paweł Łukasiewicz
+ * @author Paweł Łuczkiewicz
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */

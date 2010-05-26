@@ -82,13 +82,13 @@ abstract class Opl_Stream_Output implements Opl_Stream_Interface
 		{
 			throw new Opl_Stream_Exception('Output stream is not opened.');
 		}
+		if($length === null)
+		{
+			$length = strlen($bytes) - $offset;
+		}
 
 		if($offset > 0)
 		{
-			if($length = null)
-			{
-				$length = strlen($bytes) - $offset;
-			}
 			fwrite($this->_stream, substr($bytes, $offset, $length), $length);
 		}
 		else

@@ -140,7 +140,7 @@ abstract class Opl_Stream_Input implements Opl_Stream_Interface
 			throw new Opl_Stream_Exception('Input stream is not opened.');
 		}
 
-		$content = fgets($this->_stream, (integer)$length, "\r\n");
+		$content = ($length === null ? fgets($this->_stream) : fgets($this->_stream, $length));
 
 		if($content === false)
 		{
