@@ -22,7 +22,7 @@ The code was written by:
  - Tomasz "Zyx" Jedrzejewski - design, programming, documentation
  - Jacek "eXtreme" Jedrzejewski - testing, minor improvements, debug console
  - Amadeusz "megaweb" Starzykiewicz - additional programming,
- - Pawe³ £uczkiewicz - patches, programming.
+ - Pawel Luczkiewicz - patches, programming.
 
 We would like to thank everyone that send us new ideas and find bugs.
 
