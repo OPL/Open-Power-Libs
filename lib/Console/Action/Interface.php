@@ -9,7 +9,6 @@
  * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id: Getopt.php 334 2010-04-15 16:56:39Z zyxist $
  */
 
 /**

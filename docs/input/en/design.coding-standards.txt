@@ -32,7 +32,6 @@ The file is divided into several parts marked by comment. The code template is:
  * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
  *
- * $Id$
  */
 
 /*

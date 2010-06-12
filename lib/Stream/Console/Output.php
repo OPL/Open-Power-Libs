@@ -8,8 +8,7 @@
  *
  * Copyright (c) Invenzzia Group <http://www.invenzzia.org>
  * and other contributors. See website for details.
- *
- * $Id: Base.php 331 2010-04-14 07:23:03Z zyxist $
+ * 
  */
 
 /**
