@@ -182,7 +182,7 @@ class Opl_Debug_Console
 	static public function display()
 	{
 		// Skip, if the user has a custom console
-		if(Opl_Registry::getState('opl_custom_console'))
+		if(Opl_Registry::getValue('opl_custom_console'))
 		{
 			return;
 		}
