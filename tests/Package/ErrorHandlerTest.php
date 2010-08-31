@@ -42,7 +42,7 @@ class Package_ErrorHandlerTest extends PHPUnit_Framework_TestCase
 		echo 'XYZ';
 
 		$handler = new Opl_ErrorHandler;
-		$handler->addPort(new Opl_ErrorHandler_Port_Opl());
+		$handler->addPort(new Opl_ErrorHandler_Port());
 		$handler->display(new Opl_Exception('Foo'));
 
 		$out = ob_get_clean();
