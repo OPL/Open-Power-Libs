@@ -13,8 +13,8 @@
 class Package_RegistryTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @covers Opl_Registry::setState
-	 * @covers Opl_Registry::getState
+	 * @covers Opl_Registry::setValue
+	 * @covers Opl_Registry::getValue
 	 */
 	public function testSettingState()
 	{
@@ -24,7 +24,7 @@ class Package_RegistryTest extends PHPUnit_Framework_TestCase
 	} // end testSettingState();
 
 	/**
-	 * @covers Opl_Registry::register
+	 * @covers Opl_Registry::set
 	 * @covers Opl_Registry::get
 	 */
 	public function testSettingValue()
