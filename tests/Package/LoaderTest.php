@@ -42,7 +42,7 @@ class Package_LoaderTest extends PHPUnit_Framework_TestCase
 		if(!$this->_started)
 		{
 			$config = parse_ini_file(dirname(__FILE__).'/../../paths.ini', true);
-			require_once($config['Opl'].'Opl/Base.php');
+			require_once($config['Opl'].'Opl/Class.php');
 			Opl_Loader::register();
 
 			$this->_started = true;
