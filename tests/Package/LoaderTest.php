@@ -5,7 +5,8 @@
  * WARNING: Requires PHPUnit 3.4!
  *
  * @author Tomasz "Zyx" Jędrzejewski
- * @copyright Copyright (c) 2009 Invenzzia Group
+ * @author Jacek "eXtreme" Jędrzejewski
+ * @copyright Copyright (c) 2009-2010 Invenzzia Group
  * @license http://www.invenzzia.org/license/new-bsd New BSD License
  */
 
@@ -22,7 +23,13 @@ class Package_LoaderTest extends PHPUnit_Framework_TestCase
 	 * @var boolean
 	 */
 	private $_started = false;
-
+	
+	/**
+	 * Opl_Loader object
+	 * @var Opl_Loader
+	 */
+	private $loader = false; 
+	
 	/**
 	 * Generates a file content for the virtual file system.
 	 * @param string $file The file name
@@ -41,13 +48,11 @@ class Package_LoaderTest extends PHPUnit_Framework_TestCase
 		// @codeCoverageIgnoreStart
 		if(!$this->_started)
 		{
-			$config = parse_ini_file(dirname(__FILE__).'/../../paths.ini', true);
-			require_once($config['Opl'].'Opl/Class.php');
-			Opl_Loader::register();
+			$this->loader = new Opl_Loader();
+			$this->loader->register();
 
 			$this->_started = true;
 		}
-
 
 		vfsStreamWrapper::register();
 		vfsStreamWrapper::setRoot($root = new vfsStreamDirectory('libs'));
@@ -56,11 +61,9 @@ class Package_LoaderTest extends PHPUnit_Framework_TestCase
 		$root->addChild(new vfsStreamDirectory('Bar'));
 		$root->addChild(new vfsStreamDirectory('Joe'));
 		$root->addChild(new vfsStreamDirectory('NewLib'));
-		$root->addChild(new vfsStreamDirectory('Opl'));
+		$root->addChild(new vfsStreamDirectory('vendor'));
+		
 		$root->addChild($this->_createFile('Bar.php', 'BAR.PHP'));
-
-		// Contents of Opl/
-		$root->getChild('Opl')->addChild(vfsStream::newFile('Test.php')->withContent(''));
 
 		// Contents of NewLib/
 		$root->getChild('NewLib')->addChild($this->_createFile('Class.php', 'NEWLIB/CLASS.PHP'));
@@ -80,6 +83,10 @@ class Package_LoaderTest extends PHPUnit_Framework_TestCase
 		// Contents of Foo/
 		$root->getChild('Foo')->addChild($this->_createFile('Bar.php', 'FOO/BAR.PHP'));
 		$root->getChild('Foo')->addChild($this->_createFile('Class.php', 'FOO/CLASS.PHP'));
+		
+		// Contents of vendor/
+		$root->getChild('vendor')->addChild(new vfsStreamDirectory('Baz'));
+		$root->getChild('vendor')->getChild('Baz')->addChild($this->_createFile('Class.php', 'BAZ/CLASS.PHP'));
 		// @codeCoverageIgnoreStop
 	} // end setUp();
 
@@ -93,114 +100,163 @@ class Package_LoaderTest extends PHPUnit_Framework_TestCase
 		// @codeCoverageIgnoreStop
 	} // end tearDown();
 
+	/**
+	 * @cover Opl_Loader::setDefaultPath
+	 * @cover Opl_Loader::getDefaultPath
+	 */
 	public function testGettingDirectory()
 	{
-		Opl_Loader::setDirectory('vfs://');
-		$this->assertEquals('vfs://', Opl_Loader::getDirectory());
+		$this->loader->setNamespaceSeparator('_');
+		$this->loader->setDefaultPath('vfs://');
+		$this->assertEquals('vfs://', $this->loader->getDefaultPath());
+		
+		$this->loader->setDefaultPath('vfs://test/');
+		$this->assertEquals('vfs://test/', $this->loader->getDefaultPath());
+		
+		$this->loader->setDefaultPath('vfs://test');
+		$this->assertEquals('vfs://test/', $this->loader->getDefaultPath());
 	} // end testGettingDirectory();
 
 	/**
-	 * @cover Opl_Loader::load
+	 * @cover Opl_Loader::setNamespaceSeparator
+	 * @cover Opl_Loader::getNamespaceSeparator
+	 */
+	public function testNamespaceSeparator()
+	{
+		$this->loader->setNamespaceSeparator('test');
+		$this->assertEquals('test', $this->loader->getNamespaceSeparator());
+	} // end testNamespaceSeparator();
+	
+	/**
+	 * @cover Opl_Loader::addLibrary
+	 * @cover Opl_Loader::hasLibrary
+	 */
+	public function testAddingLibrary()
+	{
+		$this->loader->setNamespaceSeparator('_');
+		$this->loader->setDefaultPath('vfs://');
+		
+		$this->loader->addLibrary('Joe');
+		
+		$this->assertEquals(true, $this->loader->hasLibrary('Joe'));
+		
+		$this->loader->removeLibrary('Joe');
+		
+		$this->assertEquals(false, $this->loader->hasLibrary('Joe'));
+	} // end testAddingLibrary();
+	
+	/**
+	 * @cover Opl_Loader::removeLibrary
+	 * @expectedException RuntimeException
+	 */
+	public function testRemovingLibrary()
+	{
+		$this->loader->removeLibrary('Joe');
+	}
+	
+	/**
+	 * @cover Opl_Loader::addLibrary
+	 * @expectedException RuntimeException
+	 */
+	public function testDuplicateLibrary()
+	{
+		$this->loader->addLibrary('Joe');
+		$this->loader->addLibrary('Joe');
+	} // end testDuplicateLibrary();
+
+	/**
+	 * @cover Opl_Loader::loadClass
 	 */
 	public function testSimpleClassLoading()
 	{
-		Opl_Loader::setDirectory('vfs://');
+		$this->loader->setNamespaceSeparator('_');
+		$this->loader->setDefaultPath('vfs://');
+		
+		$this->loader->addLibrary('Bar', null);
 
 		ob_start();
-		Opl_Loader::load('Bar_Class');
+		$this->loader->loadClass('Bar_Class');
 
 		$this->assertEquals(ob_get_clean(), "BAR/CLASS.PHP\n");
 		return true;
 	} // end testSimpleClassLoading();
+	
+	/**
+	 * @cover Opl_Loader::loadClass
+	 */
+	public function testSimpleClassLoading2()
+	{
+		$this->loader->setNamespaceSeparator('_');
+		$this->loader->setDefaultPath('vfs://');
+		
+		$this->loader->addLibrary('Baz', 'vfs://vendor/');
+
+		ob_start();
+		$this->loader->loadClass('Baz_Class');
+
+		$this->assertEquals(ob_get_clean(), "BAZ/CLASS.PHP\n");
+		return true;
+	} // end testSimpleClassLoading2();
 
 	/**
-	 * @cover Opl_Loader::load
+	 * @cover Opl_Loader::setNamespaceSeparator
+	 * @cover Opl_Loader::loadClass
 	 */
 	public function testLoadNamespaceClass()
 	{
-		Opl_Loader::setDirectory('vfs://');
-
+		$this->loader->setNamespaceSeparator('\\');
+		$this->loader->setDefaultPath('vfs://');
+		
+		$this->loader->addLibrary('Foo');
+		
 		ob_start();
-		Opl_Loader::load('Foo\Bar');
+		$this->loader->loadClass('Foo\Bar');
 
 		$this->assertEquals(ob_get_clean(), "FOO/BAR.PHP\n");
 		return true;
 	} // end testLoadNamespaceClass();
 
 	/**
-	 * @cover Opl_Loader::load
+	 * @cover Opl_Loader::loadClass
 	 */
 	public function testLoadMoreClasses()
 	{
-		Opl_Loader::setDirectory('vfs://');
+		$this->loader->setNamespaceSeparator('_');
+		$this->loader->setDefaultPath('vfs://');
+		
+		$this->loader->addLibrary('Joe');
 
 		ob_start();
-		Opl_Loader::load('Joe_Foo');
-		Opl_Loader::load('Joe_Bar');
+		$this->loader->loadClass('Joe_Foo');
+		$this->loader->loadClass('Joe_Bar');
 
 		$this->assertEquals(ob_get_clean(), "JOE/FOO.PHP\nJOE/BAR.PHP\n");
 		return true;
 	} // end testLoadMoreClasses();
-
+	
 	/**
-	 * @cover Opl_Loader::load
-	 * @cover Opl_Loader::addLibrary
+	 * @cover Opl_Loader::loadClass
 	 */
-	public function testLoadDirectory()
+	public function testFailedLoad()
 	{
-		Opl_Loader::addLibrary('Joe', array('directory' => 'vfs://Joe/'));
+		$this->loader->setNamespaceSeparator('_');
+		$this->loader->setDefaultPath('vfs://');
 
-		ob_start();
-		Opl_Loader::load('Joe_Foo');
-		Opl_Loader::load('Joe_Bar');
-
-		$this->assertEquals(ob_get_clean(), "JOE/FOO.PHP\nJOE/BAR.PHP\n");
+		$this->assertEquals(false, $this->loader->loadClass('Foo_Bar'));
 		return true;
-	} // end testLoadDirectory();
-
+	} // end testFailedLoad();
+	
 	/**
-	 * @cover Opl_Loader::load
-	 * @cover Opl_Loader::addLibrary
+	 * @cover Opl_Loader::loadClass
 	 */
-	public function testLoadBasePath()
+	public function testFailedLoad2()
 	{
-		Opl_Loader::addLibrary('Joe', array('basePath' => 'vfs://'));
+		$this->loader->setNamespaceSeparator('_');
+		$this->loader->setDefaultPath('vfs://');
 
-		ob_start();
-		Opl_Loader::load('Joe_Foo');
-		Opl_Loader::load('Joe_Bar');
-
-		$this->assertEquals(ob_get_clean(), "JOE/FOO.PHP\nJOE/BAR.PHP\n");
+		$this->loader->addLibrary('Bar');
+		
+		$this->assertEquals(false, $this->loader->loadClass('Bar'));
 		return true;
-	} // end testLoadBasePath();
-
-	/**
-	 * @cover Opl_Loader::load
-	 * @cover Opl_Loader::addLibrary
-	 */
-	public function testLoadWholeNameByDirectory()
-	{
-		Opl_Loader::addLibrary('Bar', array('directory' => 'vfs://Bar/'));
-
-		ob_start();
-		Opl_Loader::load('Bar');
-
-		$this->assertEquals(ob_get_clean(), "BAR.PHP");
-		return true;
-	} // end testLoadWholeNameByDirectory();
-
-	/**
-	 * @cover Opl_Loader::load
-	 * @cover Opl_Loader::addLibrary
-	 */
-	public function testLoadWholeNameByBasePath()
-	{
-		Opl_Loader::addLibrary('Bar', array('basePath' => 'vfs://'));
-
-		ob_start();
-		Opl_Loader::load('Bar');
-
-		$this->assertEquals(ob_get_clean(), "BAR.PHP\n");
-		return true;
-	} // end testLoadWholeNameByBasePath();
+	} // end testFailedLoad2();
 } // end Package_LoaderTest;
