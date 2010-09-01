@@ -71,7 +71,7 @@ class Opl_Loader
 	 * @param string $path The path to the library.
 	 * @param string $extension The library file extension.
 	 */
-	public function addLibrary($library, $path, $extension = '.php')
+	public function addLibrary($library, $path = null, $extension = '.php')
 	{
 		if(isset($this->_libraries[(string)$library]))
 		{
@@ -87,7 +87,7 @@ class Opl_Loader
 		}
 		else
 		{
-			$this->_libraries[(string)$library] = $this->_defaultPath.$library.'/';
+			$this->_libraries[(string)$library] = $this->_defaultPath;
 		}
 		$this->_extensions[(string)$library] = $extension;
 	} // end addLibrary();
