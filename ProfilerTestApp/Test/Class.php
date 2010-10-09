@@ -13,7 +13,7 @@ class Test_Class
 		$event = $this->_profiler->getEvent('doSomething');
 		$event->notify('oplClass.start', microtime(true));
 		$class = new Opl_Class();
-		$this->_profiler->notify('doSomething', 'oplClass.end', microtime(true));
+		$this->_profiler->notifyEvent('doSomething', 'oplClass.end', microtime(true));
 		$event->notify('oplClass', 'dupa');
 		for($i = 0; $i<100000; $i++)
 		{
@@ -30,7 +30,7 @@ class Test_Class
 		{
 			$i = $i + 5;
 		}
-		$this->_profiler->notify('doAnything', 'template.name', 'name.tpl');
-		$this->_profiler->notify('doAnything', 'end', microtime(true));
+		$this->_profiler->notifyEvent('doAnything', 'template.name', 'name.tpl');
+		$this->_profiler->notifyEvent('doAnything', 'end', microtime(true));
 	} // end doAnything();
 } // end Test_Class;

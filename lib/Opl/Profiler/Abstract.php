@@ -12,7 +12,7 @@
  */
 
 /**
- * Interface implementation for standard profiler for Open-Power-Libs.
+ * Interface implementation for Open-Power-Libs compatible module profiler.
  *
  * @author Amadeusz "megawebmaster" Starzykiewicz
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
@@ -32,21 +32,21 @@ abstract class Opl_Profiler_Abstract implements SeekableIterator, Countable
 		 */
 		$_positions = array(),
 		/**
-		 * Contains created modules.
+		 * Contains events data.
 		 * @var array
-		 */
-		$_modules = array();
+		*/
+		$_events = array();
 
 // Interfaces implementation.
 
 	/**
-	 * Returns count of modules.
+	 * Returns count of events.
 	 *
 	 * @return integer
 	 */
 	public function count()
 	{
-		return count($this->_modules);
+		return count($this->_events);
 	} // end count();
 
 	/**
@@ -58,13 +58,13 @@ abstract class Opl_Profiler_Abstract implements SeekableIterator, Countable
 	} // end rewind();
 
 	/**
-	 * Returns module in current position.
+	 * Returns event in current position.
 	 *
-	 * @return Opl_Profiler_Module_Interface
+	 * @return Opl_Profiler_Event_Interface
 	 */
 	public function current()
 	{
-		return $this->_modules[$this->_positions[$this->_position]];
+		return $this->_events[$this->_positions[$this->_position]];
 	} // end current();
 
 	/**
@@ -94,15 +94,16 @@ abstract class Opl_Profiler_Abstract implements SeekableIterator, Countable
 	{
 		if(isset($this->_positions[$this->_position]))
 		{
-			return isset($this->_modules[$this->_positions[$this->_position]]);
+			return isset($this->_events[$this->_positions[$this->_position]]);
 		}
 		return false;
 	} // end valid();
 
 	/**
 	 * Moves current position to selected place.
-	 * 
+	 *
 	 * @param integer $position Needed position
+	 * @throws OutOfBoundsException
 	 */
 	public function seek($position)
 	{
@@ -112,4 +113,4 @@ abstract class Opl_Profiler_Abstract implements SeekableIterator, Countable
 			throw new OutOfBoundsException('Invalid seek position ('.$position.')');
 		}
 	} // end seek();
-} // end Opl_Profiler;
+} // end Opl_Profiler_Abstract;

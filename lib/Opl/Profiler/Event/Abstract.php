@@ -12,7 +12,7 @@
  */
 
 /**
- * Interface implementation for Open-Power-Libs compatible module profiler.
+ * Interface implementation for Open-Power-Libs compatible event.
  *
  * @author Amadeusz "megawebmaster" Starzykiewicz
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
@@ -103,6 +103,7 @@ abstract class Opl_Profiler_Event_Abstract implements SeekableIterator, Countabl
 	 * Moves current position to selected place.
 	 *
 	 * @param integer $position Needed position
+	 * @throws OutOfBoundsException
 	 */
 	public function seek($position)
 	{

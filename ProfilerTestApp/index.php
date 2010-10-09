@@ -5,16 +5,17 @@ $loader->addLibrary('Opl', '../lib/');
 $loader->addLibrary('Test', './');
 $loader->register();
 
-$profiler = new Opl_Profiler();
+$test_profiler = new Opl_Profiler('TestClass');
 $class = new Test_Class();
-$class->setProfiler($profiler->getModule('Test'));
+$class->setProfiler($test_profiler);
 $class->doSomething();
+$another_profiler = new Opl_Profiler('AnotherInstance');
 $anotherInstance = new Test_Class();
-$anotherInstance->setProfiler($profiler->getModule('AnotherInstance'));
+$anotherInstance->setProfiler($another_profiler);
 $anotherInstance->doAnything();
 
 // Iterate through all modules.
-foreach($profiler as $module)
+foreach(array($test_profiler, $another_profiler) as $module)
 {
 	// Show module name.
 	echo $module->getName().PHP_EOL;
@@ -32,9 +33,7 @@ foreach($profiler as $module)
 		}
 	}
 }
-// Returns all modules in array
-$modules = $profiler->getModules();
 // Returns all events in array
-$events = $profiler->getModule('Test')->getEvents();
+$events = $test_profiler->getEvents();
 // Return all event data in array
-$eventData = $profiler->getModule('Test')->getEvent('doAnything')->getData();
+$eventData = $test_profiler->getEvent('doAnything')->getData();
