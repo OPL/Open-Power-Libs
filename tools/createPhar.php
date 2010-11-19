@@ -97,6 +97,10 @@ class KeyFilter extends FilterIterator
 	 */
 	public function accept()
 	{
+		if(is_dir($this->getInnerIterator()->key()))
+		{
+			return false;
+		}
 		if(strpos($this->getInnerIterator()->key(), $this->remove) === false)
 		{
 			return true;
@@ -156,6 +160,7 @@ try
 	);
 
 	// Add the stub
+	$stubs->library = $_SERVER['argv'][1];
 	if($_SERVER['argv'][1] == 'Opl')
 	{
 		// Define a stub for the core
@@ -165,8 +170,6 @@ try
 	else
 	{
 		// Define a stub for other libraries
-				
-		$stubs->library = $_SERVER['argv'][1];
 		if(isset($phar['Class.php']))
 		{
 			$phar->setStub(file_get_contents($_SERVER['argv'][2].'Class.php').$stubs->create('addon'));
