@@ -444,7 +444,7 @@
 			$id = strrpos($className, '_');
 			if(substr($className, $id+1, 9) == 'Exception')
 			{
-				require($base.'Exception.php');
+				require(self::getLibraryPath($library).'Exception.php');
 				return false;
 			}
 			// Everything is done.
