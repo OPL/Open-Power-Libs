@@ -12,7 +12,9 @@
  */
 
 /**
- * Interface implementation for standard profiler for Open-Power-Libs.
+ * The base class for the Open Power Libs profilers. It provides the base
+ * module storage, as well as iteration over the collection of profiler
+ * modules.
  *
  * @author Amadeusz "megawebmaster" Starzykiewicz
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
@@ -37,10 +39,8 @@ abstract class Opl_Profiler_Abstract implements SeekableIterator, Countable
 		 */
 		$_modules = array();
 
-// Interfaces implementation.
-
 	/**
-	 * Returns count of modules.
+	 * Returns the number of profiler modules.
 	 *
 	 * @return integer
 	 */
@@ -50,7 +50,7 @@ abstract class Opl_Profiler_Abstract implements SeekableIterator, Countable
 	} // end count();
 
 	/**
-	 * Rewinds iterator position to start.
+	 * Rewinds the iterator position to the beginning.
 	 */
 	public function rewind()
 	{
@@ -101,7 +101,8 @@ abstract class Opl_Profiler_Abstract implements SeekableIterator, Countable
 
 	/**
 	 * Moves current position to selected place.
-	 * 
+	 *
+	 * @throws OutOfBoundsException
 	 * @param integer $position Needed position
 	 */
 	public function seek($position)

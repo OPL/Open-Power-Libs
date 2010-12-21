@@ -22,14 +22,14 @@ class Opl_Profiler extends Opl_Profiler_Abstract implements Opl_Profiler_Interfa
 {
 	protected
 		/**
-		 * Currently used class of modules.
+		 * The name of the default class for new modules.
 		 * @var string
 		 */
 		$_moduleClassName = 'Opl_Profiler_Module';
 
 	/**
-	 * Returns registered module.
-	 * If module doesn't exists creates new using current module classname.
+	 * Returns the registered module. If the module doesn't exist, it creates
+	 * a new one using the module class name.
 	 * 
 	 * @param string $name Module name.
 	 * @return Opl_Profiler_Module_Interface
@@ -45,7 +45,7 @@ class Opl_Profiler extends Opl_Profiler_Abstract implements Opl_Profiler_Interfa
 	} // end getModule();
 
 	/**
-	 * Adds module to profiler.
+	 * Adds the module to the profiler.
 	 * 
 	 * @param string $name Module name.
 	 * @param Opl_Profiler_Module_Interface $module Module.
@@ -57,7 +57,7 @@ class Opl_Profiler extends Opl_Profiler_Abstract implements Opl_Profiler_Interfa
 	} // end addModule();
 
 	/**
-	 * Sets default class name for new modules.
+	 * Sets the default class name for new modules.
 	 *
 	 * @param string $classname Module class name.
 	 */
@@ -67,7 +67,7 @@ class Opl_Profiler extends Opl_Profiler_Abstract implements Opl_Profiler_Interfa
 	} // end setModuleClassName();
 
 	/**
-	 * Returns default class name for new modules.
+	 * Returns the default class name for new modules.
 	 * 
 	 * @return string
 	 */
@@ -77,7 +77,7 @@ class Opl_Profiler extends Opl_Profiler_Abstract implements Opl_Profiler_Interfa
 	} // end getModuleClassName();
 
 	/**
-	 * Returns array of registered modules.
+	 * Returns an array of registered modules.
 	 *
 	 * @return array
 	 */
