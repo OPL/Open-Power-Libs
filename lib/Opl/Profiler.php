@@ -25,64 +25,126 @@ class Opl_Profiler extends Opl_Profiler_Abstract implements Opl_Profiler_Interfa
 		 * The name of the default class for new modules.
 		 * @var string
 		 */
-		$_moduleClassName = 'Opl_Profiler_Module';
+		$_eventClassName = 'Opl_Profiler_Event',
+		/**
+		 * Profiler name.
+		 * @var string
+		 */
+		$_name;
 
 	/**
-	 * Returns the registered module. If the module doesn't exist, it creates
-	 * a new one using the module class name.
-	 * 
-	 * @param string $name Module name.
-	 * @return Opl_Profiler_Module_Interface
+	 * Creates an object. Sets its name.
+	 *
+	 * @param string $name Name of module.
 	 */
-	public function getModule($name)
+	public function __construct($name)
 	{
-		if(!isset($this->_modules[(string)$name]))
+		$this->_name = (string)$name;
+	} // end __construct();
+
+	/**
+	 * Returns the name of this profiler.
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->_name;
+	} // end getName();
+
+	/**
+	 * Adds an event to this profiler.
+	 *
+	 * @param Opl_Profiler_Event_Interface $event Event object.
+	 */
+	public function addEvent(Opl_Profiler_Event_Interface $event)
+	{
+		$this->_events[$event->getName()] = $event;
+		$this->_positions[] = $event->getName();
+	} // end addEvent();
+
+	/**
+	 * Returns the event object.
+	 *
+	 * @param string $eventName Event name.
+	 * @throws Opl_Profiler_Exception
+	 */
+	public function getEvent($eventName)
+	{
+		$eventName = (string)$eventName;
+		if(!isset($this->_events[$eventName]))
 		{
-			$this->_modules[(string)$name] = new $this->_moduleClassName((string)$name);
-			$this->_positions[] = (string)$name;
+			$this->_events[$eventName] = new $this->_eventClassName($eventName);
+			if(!$this->_events[$eventName] instanceof Opl_Profiler_Event_Interface)
+			{
+				throw new Opl_Profiler_Exception('Event "'.$eventName.'" is not an instance of Opl_Profiler_Event_Interface!');
+			}
+			$this->_positions[] = $eventName;
 		}
-		return $this->_modules[(string)$name];
-	} // end getModule();
+		return $this->_events[$eventName];
+	} // end getEvent();
 
 	/**
-	 * Adds the module to the profiler.
-	 * 
-	 * @param string $name Module name.
-	 * @param Opl_Profiler_Module_Interface $module Module.
+	 * Creates an event with the specified name.
+	 *
+	 * @param string $eventName The event name.
+	 * @throws Opl_Profiler_Exception
 	 */
-	public function addModule(Opl_Profiler_Module_Interface $module)
+	public function createEvent($eventName)
 	{
-		$this->_modules[$module->getName()] = $module;
-		$this->_positions[] = $module->getName();
-	} // end addModule();
+		$eventName = (string)$eventName;
+		$this->_events[$eventName] = new $this->_eventClassName($eventName);
+		if(!$this->_events[$eventName] instanceof Opl_Profiler_Event_Interface)
+		{
+			throw new Opl_Profiler_Exception('Event "'.$eventName.'" is not an instance of Opl_Profiler_Event_Interface!');
+		}
+		$this->_positions[] = $eventName;
+	} // end createEvent();
 
 	/**
-	 * Sets the default class name for new modules.
+	 * Notifies the event about the action.
+	 *
+	 * @param string $eventName Event name.
+	 * @param mixed $paramName The parameter name or array of the parameters and its values.
+	 * @param mixed $paramValue Optional parameter value used when a single parameter is passed.
+	 * @throws Opl_Profiler_Exception
+	 */
+	public function notifyEvent($eventName, $paramName, $paramValue = null)
+	{
+		if(!isset($this->_events[$eventName]))
+		{
+			throw new Opl_Profiler_Exception('There\'s no event with name "'.$eventName.'"!');
+		}
+		$this->_events[$eventName]->notify($paramName, $paramValue);
+	} // end notify();
+
+	/**
+	 * Sets the default class name for new events.
 	 *
 	 * @param string $classname Module class name.
 	 */
-	public function setModuleClassName($classname)
+	public function setEventClassName($classname)
 	{
-		$this->_moduleClassName = (string)$classname;
-	} // end setModuleClassName();
+		$this->_eventClassName = (string)$classname;
+	} // end setEventClassName();
 
 	/**
-	 * Returns the default class name for new modules.
-	 * 
+	 * Returns the default class name for new events.
+	 *
 	 * @return string
 	 */
-	public function getModuleClassName()
+	public function getEventClassName()
 	{
-		return $this->_moduleClassName;
-	} // end getModuleClassName();
+		return $this->_eventClassName;
+	} // end getEventClassName();
 
 	/**
-	 * Returns an array of registered modules.
+	 * Returns an array of registered events.
 	 *
 	 * @return array
 	 */
-	public function getModules()
+	public function getEvents()
 	{
-		return $this->_modules;
-	} // end getModules();
+		return $this->_events;
+	} // end getEvents();
 } // end Opl_Profiler;

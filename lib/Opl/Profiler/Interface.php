@@ -12,7 +12,7 @@
  */
 
 /**
- * The interface needed to implement for profiler.
+ * The interface for Open-Power-Libs compatible profiler.
  *
  * @author Amadeusz "megawebmaster" Starzykiewicz
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
@@ -21,25 +21,39 @@
 interface Opl_Profiler_Interface
 {
 	/**
-	 * Returns registered module.
-	 * If module doesn't exists creates new using current module classname.
+	 * Returns name of module.
 	 *
-	 * @param string $name Module name.
-	 * @return Opl_Profiler_Module_Interface
+	 * @return string
 	 */
-	public function getModule($name);
+	public function getName();
 
 	/**
-	 * Adds module to profiler.
+	 * Adds an event to module.
 	 *
-	 * @param Opl_Profiler_Module_Interface $module Module.
+	 * @param Opl_Profiler_Event_Interface $event Event object.
 	 */
-	public function addModule(Opl_Profiler_Module_Interface $module);
+	public function addEvent(Opl_Profiler_Event_Interface $event);
 
 	/**
-	 * Returns array of registered modules.
+	 * Returns event object.
+	 *
+	 * @param string $eventName Event name.
+	 */
+	public function getEvent($eventName);
+
+	/**
+	 * Notifies event about action.
+	 *
+	 * @param string $eventName Event name.
+	 * @param mixed $paramName Param name or array of params and its values.
+	 * @param mixed $paramValue optional Param value.
+	 */
+	public function notifyEvent($eventName, $paramName, $paramValue = null);
+
+	/**
+	 * Returns array of registered events.
 	 *
 	 * @return array
 	 */
-	public function getModules();
+	public function getEvents();
 } // end Opl_Profiler_Interface;

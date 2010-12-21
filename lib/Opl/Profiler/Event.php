@@ -12,7 +12,7 @@
  */
 
 /**
- * The standard profiler module for Open-Power-Libs.
+ * The standard event for the Opl_Profiler.
  *
  * @author Amadeusz "megawebmaster" Starzykiewicz
  * @copyright Invenzzia Group <http://www.invenzzia.org/> and contributors.
@@ -68,6 +68,7 @@ class Opl_Profiler_Event extends Opl_Profiler_Event_Abstract implements Opl_Prof
 	 *
 	 * @param mixed $paramName Param name or array of params and its values.
 	 * @param mixed $paramValue optional Param value.
+	 * @throws Opl_Profiler_Event_Exception
 	 */
 	public function notify($paramName, $paramValue = null)
 	{
@@ -103,6 +104,12 @@ class Opl_Profiler_Event extends Opl_Profiler_Event_Abstract implements Opl_Prof
 		}
 	} // end notify();
 
+	/**
+	 * Sets the value to the param.
+	 *
+	 * @param string $name Name of param.
+	 * @param mixed $value Value.
+	 */
 	public function set($name, $value)
 	{
 		$name = explode('.', $name);
@@ -129,6 +136,13 @@ class Opl_Profiler_Event extends Opl_Profiler_Event_Abstract implements Opl_Prof
 		}
 	} // end set();
 
+	/**
+	 * Returns the param value.
+	 * If param name is not found returns its parent.
+	 *
+	 * @param string $name Param name.
+	 * @return mixed
+	 */
 	public function get($name)
 	{
 		$name = explode('.', $name);
@@ -156,11 +170,23 @@ class Opl_Profiler_Event extends Opl_Profiler_Event_Abstract implements Opl_Prof
 
 // Magical methods
 
+	/**
+	 * Magical method for get().
+	 *
+	 * @param string $name Param name.
+	 * @return mixed
+	 */
 	public function __get($name)
 	{
 		return $this->get($name);
 	} // end __get();
 
+	/**
+	 * Magical method for set().
+	 *
+	 * @param string $name Param name.
+	 * @param mixed $value Value
+	 */
 	public function __set($name, $value)
 	{
 		$this->set($name, $value);
