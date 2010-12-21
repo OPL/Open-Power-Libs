@@ -37,7 +37,7 @@ interface Opl_Translation_Interface
 	 *
 	 * @param string $group The message group
 	 * @param string $id The message identifier
-	 * @param ... Custom arguments for the specified text.
+	 * @param array $args Custom arguments for the specified text.
 	 */
-	public function assign($group, $id);
+	public function assign($group, $id, array $args);
 } // end Opl_Translation_Interface;
